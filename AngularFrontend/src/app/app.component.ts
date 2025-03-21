@@ -1,9 +1,10 @@
 import {Component, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { PushCounterComponent } from "./push-counter/push-counter.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, PushCounterComponent],
   templateUrl: './app.component.html',
   // template: `
   //   <div>
