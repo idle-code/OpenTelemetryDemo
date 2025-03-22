@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core';
+import { WebApiService } from "../web-api.service";
 
 @Component({
     selector: 'app-push-counter',
@@ -14,7 +15,15 @@ import { Component, signal } from '@angular/core';
 export class PushCounterComponent {
     PushCounter = signal<number>(0);
 
+    constructor(private webApi: WebApiService) {
+        this.webApi = webApi;
+    }
+
     RegisterPush() {
-        this.PushCounter.update(value => value + 1);
+        console.log("RegisterPush executed");
+        this.webApi.incrementCounter("foo-bar").subscribe(currentValue => {
+            this.PushCounter.set(currentValue);
+            //this.PushCounter.update(value => value + 1);
+        });
     }
 }
