@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from "@angular/common/http";
 import { WebApiUrlInterceptor } from "./web-api-url-interceptor.interceptor";
+import { environment } from "../environments/environment";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -17,7 +18,7 @@ export const appConfig: ApplicationConfig = {
         },
         {
             provide: "BASE_API_URL",
-            useValue: "http://localhost:8080"
+            useValue: environment.baseApiUrl
         }
     ]
 };
