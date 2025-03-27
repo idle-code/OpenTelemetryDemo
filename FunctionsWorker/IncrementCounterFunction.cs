@@ -7,7 +7,7 @@ namespace FunctionsWorker;
 
 public record CounterDetailsDto
 {
-    public string Id { get; init; }
+    public string Id { get; init; } = null!;
     public int Delta { get; init; }
 }
 
@@ -20,6 +20,7 @@ public class IncrementCounterFunction
         _logger = logger;
     }
 
+    // TODO: Use RabbitMQ trigger
     [Function(nameof(IncrementCounterHttpTrigger))]
     public async Task<HttpResponseData> IncrementCounterHttpTrigger(
         [HttpTrigger(AuthorizationLevel.Anonymous, methods: "post", Route = "counter")] HttpRequestData req,

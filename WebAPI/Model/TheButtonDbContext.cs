@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace FunctionsWorker;
+namespace WebAPI.Model;
 
 public class TheButtonDbContext : DbContext
 {
-    public DbSet<TheCounter> Counters { get; set; }
+    public DbSet<NamedCounter> NamedCounters { get; set; }
 
     public TheButtonDbContext(DbContextOptions<TheButtonDbContext> dbContextOptions)
         : base(dbContextOptions)
@@ -12,13 +12,17 @@ public class TheButtonDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TheCounter>(counter =>
+        modelBuilder.Entity<NamedCounter>(counter =>
         {
             counter.HasKey(c => c.Id);
+            counter.Property(c => c.Id)
+                .HasMaxLength(64);
 
             counter.Property(c => c.Value)
                 .HasDefaultValue(0)
                 .IsRequired();
+
+            counter.ToTable(nameof(NamedCounters), "TheButton");
         });
     }
 }

@@ -2,24 +2,28 @@
 
 #nullable disable
 
-namespace FunctionsWorker.Migrations
+namespace WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "TheButton");
+
             migrationBuilder.CreateTable(
-                name: "Counters",
+                name: "NamedCounters",
+                schema: "TheButton",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
                     Value = table.Column<int>(type: "integer", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Counters", x => x.Id);
+                    table.PrimaryKey("PK_NamedCounters", x => x.Id);
                 });
         }
 
@@ -27,7 +31,8 @@ namespace FunctionsWorker.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Counters");
+                name: "NamedCounters",
+                schema: "TheButton");
         }
     }
 }
