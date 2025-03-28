@@ -39,7 +39,13 @@ internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCoun
         counter.Value += request.Delta;
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        // TODO: Send RabbitMq message
+        var threshold = 10;
+        if (counter.Value > threshold)
+        {
+            _logger.LogWarning("Counting threshold {ThreasholdValue} reached, notifying authorities", threshold);
+            // TODO: Send RabbitMq message
+            // Make it a cookie-clicker clone?
+        }
 
         return counter.Value;
     }

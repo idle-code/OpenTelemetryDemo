@@ -1,4 +1,3 @@
-using System.Security.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
