@@ -21,9 +21,8 @@ export class PushCounterComponent {
 
     RegisterPush() {
         console.log("RegisterPush executed");
-        this.webApi.incrementCounter("foo-bar").subscribe(currentValue => {
-            this.PushCounter.set(currentValue);
-            //this.PushCounter.update(value => value + 1);
+        this.webApi.incrementCounter("rabarbarowany").subscribe(namedCounter => {
+            this.PushCounter.set(namedCounter.value);
         });
     }
 }

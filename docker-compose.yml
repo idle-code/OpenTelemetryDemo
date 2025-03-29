@@ -16,7 +16,7 @@ services:
     ports:
       - "8081:8080"
     environment:
-      ConnectionStrings__RabbitMq: amqp://admin:admin@rabbitmq
+      ConnectionStrings__RabbitMq: "amqp://guest:guest@rabbitmq:5672/"
       ConnectionStrings__TheButton: "User ID=postgres;Password=Rabarbar123;Host=postgres;Port=5432;Database=TheButton;Pooling=true;"
     depends_on:
       - rabbitmq
@@ -27,13 +27,13 @@ services:
     build:
       context: FunctionsWorker
     environment:
-      ConnectionStrings__RabbitMq: amqp://rabbitmq
+      ConnectionStrings__RabbitMq: "amqp://guest:guest@rabbitmq:5672/"
     depends_on:
       - rabbitmq
       - postgres
 
   rabbitmq:
-    image: masstransit/rabbitmq
+    image: rabbitmq:4-management
     container_name: rabbit_mq
     user: rabbitmq
     ports:

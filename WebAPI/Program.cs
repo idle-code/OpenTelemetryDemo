@@ -1,9 +1,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using WebAPI;
 using WebAPI.Model;
+using EasyNetQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,9 +21,11 @@ builder.Services.AddMediatR(config =>
     config.RegisterServicesFromAssemblyContaining<IncrementNamedCounterHandler>();
 });
 
+// builder.Services.AddEasyNetQ();
+
 builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(services =>
 {
-    var connectionString = services.GetRequiredService<IConfigurationManager>().GetConnectionString("RabbitMq")!;
+    var connectionString = services.GetRequiredService<IConfiguration>().GetConnectionString("RabbitMq")!;
 
     return new ConnectionFactory
     {
@@ -48,12 +52,18 @@ app.UseCors();
 app.MapGet("/counter/{id}", async (
     [FromRoute] string id,
     IMediator mediator,
-    CancellationToken cancellationToken) => await mediator.Send(new GetNamedCounter(id), cancellationToken));
+    CancellationToken cancellationToken) =>
+{
+    var counter = await mediator.Send(new GetNamedCounter(id), cancellationToken);
+    return counter is null ? Results.NotFound() : Results.Ok(counter);
+})
+.Produces<NamedCounter?>();
 
 app.MapPost("/counter/{id}/increment", async (
     [FromRoute] string id,
     [FromBody] int byValue,
     IMediator mediator,
-    CancellationToken cancellationToken) => await mediator.Send(new IncrementNamedCounter(id, byValue), cancellationToken));
+    CancellationToken cancellationToken) => await mediator.Send(new IncrementNamedCounter(id, byValue), cancellationToken))
+    .Produces<NamedCounter>();
 
 app.Run();

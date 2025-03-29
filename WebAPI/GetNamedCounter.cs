@@ -4,9 +4,9 @@ using WebAPI.Model;
 
 namespace WebAPI;
 
-public record GetNamedCounter(string CounterId) : IRequest<int>;
+internal record GetNamedCounter(string CounterId) : IRequest<NamedCounter?>;
 
-internal sealed class GetNamedCounterHandler : IRequestHandler<GetNamedCounter, int>
+internal sealed class GetNamedCounterHandler : IRequestHandler<GetNamedCounter, NamedCounter?>
 {
     private readonly ILogger<GetNamedCounterHandler> _logger;
     private readonly TheButtonDbContext _dbContext;
@@ -17,7 +17,7 @@ internal sealed class GetNamedCounterHandler : IRequestHandler<GetNamedCounter, 
         _dbContext = dbContext;
     }
 
-    public async Task<int> Handle(GetNamedCounter request, CancellationToken cancellationToken)
+    public async Task<NamedCounter?> Handle(GetNamedCounter request, CancellationToken cancellationToken)
     {
         using var _ = _logger.BeginScope(new Dictionary<string, object>
         {
@@ -28,9 +28,9 @@ internal sealed class GetNamedCounterHandler : IRequestHandler<GetNamedCounter, 
         if (counter is null)
         {
             _logger.LogInformation("No existing counter found");
-            return 0;
+            return null;
         }
 
-        return counter.Value;
+        return counter;
     }
 }

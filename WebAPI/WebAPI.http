@@ -1,6 +1,14 @@
-@WebAPI_HostAddress = http://localhost:5027
+@BaseUrl = http://localhost:8080
+@CounterId = cygans
 
-GET {{WebAPI_HostAddress}}/weatherforecast/
+### Retrieve counter by name
+GET {{BaseUrl}}/counter/{{CounterId}}
+Content-Type: application/json
 Accept: application/json
 
-###
+### Increment counter by name
+POST {{BaseUrl}}/counter/{{CounterId}}/increment
+Content-Type: application/json
+Accept: application/json
+
+5

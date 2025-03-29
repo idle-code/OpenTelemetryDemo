@@ -1,23 +1,33 @@
+using System.Text;
+using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RabbitMQ.Client;
 using WebAPI.Model;
 
 namespace WebAPI;
 
-public record IncrementNamedCounter(string CounterId, int Delta) : IRequest<int>;
+internal record IncrementNamedCounter(string CounterId, int Delta) : IRequest<NamedCounter>;
 
-internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCounter, int>
+internal record ThresholdReachedMessage(string CounterId, int Threshold);
+
+internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCounter, NamedCounter>
 {
+    const int Threshold = 10;
+    private const string ThresholdsQueueName = "thresholds";
+
     private readonly ILogger<IncrementNamedCounterHandler> _logger;
     private readonly TheButtonDbContext _dbContext;
+    private readonly IConnectionFactory _rabbitConnectionFactory;
 
-    public IncrementNamedCounterHandler(ILogger<IncrementNamedCounterHandler> logger, TheButtonDbContext dbContext)
+    public IncrementNamedCounterHandler(ILogger<IncrementNamedCounterHandler> logger, TheButtonDbContext dbContext, IConnectionFactory rabbitConnectionFactory)
     {
         _logger = logger;
         _dbContext = dbContext;
+        _rabbitConnectionFactory = rabbitConnectionFactory;
     }
 
-    public async Task<int> Handle(IncrementNamedCounter request, CancellationToken cancellationToken)
+    public async Task<NamedCounter> Handle(IncrementNamedCounter request, CancellationToken cancellationToken)
     {
         using var _ = _logger.BeginScope(new Dictionary<string, object>
         {
@@ -36,17 +46,39 @@ internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCoun
         }
 
         _logger.LogInformation("Incrementing {CounterId} counter by {Delta}", request.CounterId, request.Delta);
+        var oldValue = counter.Value;
         counter.Value += request.Delta;
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var threshold = 10;
-        if (counter.Value > threshold)
+        if (oldValue < Threshold && counter.Value >= Threshold)
         {
-            _logger.LogWarning("Counting threshold {ThreasholdValue} reached, notifying authorities", threshold);
-            // TODO: Send RabbitMq message
-            // Make it a cookie-clicker clone?
+            _logger.LogWarning("Counting threshold {ThresholdValue} reached - notifying authorities", Threshold);
+
+            var message = new ThresholdReachedMessage(counter.Id, Threshold);
+            await PublishMessage(message, cancellationToken);
         }
 
-        return counter.Value;
+        return counter;
+    }
+
+    private async ValueTask PublishMessage(ThresholdReachedMessage message, CancellationToken cancellationToken)
+    {
+        await using var rabbitConnection = await _rabbitConnectionFactory.CreateConnectionAsync(cancellationToken);
+        await using var channel = await rabbitConnection.CreateChannelAsync(cancellationToken: cancellationToken);
+        await channel.QueueDeclareAsync(
+            queue: ThresholdsQueueName,
+            durable: false,
+            exclusive: false,
+            autoDelete: false,
+            arguments: null,
+            cancellationToken: cancellationToken);
+
+        var messageJson = JsonSerializer.Serialize(message);
+        var messageBytes = Encoding.UTF8.GetBytes(messageJson);
+        await channel.BasicPublishAsync(
+            exchange: string.Empty,
+            routingKey: ThresholdsQueueName,
+            messageBytes,
+            cancellationToken: cancellationToken);
     }
 }

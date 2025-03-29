@@ -18,4 +18,4 @@ RUN chmod 755 /azure-functions-host /app /run /etc/profile
 
 USER $APP_UID
 
-ENV AzureWebJobsScriptRoot=/app AzureFunctionsJobHost__Logging__Console__IsEnabled=false
+ENV AzureWebJobsScriptRoot=/app AzureFunctionsJobHost__Logging__Console__IsEnabled=true

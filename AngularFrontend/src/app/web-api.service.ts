@@ -9,7 +9,17 @@ export class WebApiService {
   constructor(private webApi: HttpClient) {
   }
 
-  incrementCounter(id: string): Observable<number> {
-    return this.webApi.post<number>(`/counter/${id}/increment`, 1);
+  incrementCounter(id: string): Observable<NamedCounter> {
+    return this.webApi.post<NamedCounter>(`/counter/${id}/increment`, 1);
+  }
+}
+
+export class NamedCounter {
+  readonly id: string;
+  readonly value: number;
+
+  constructor(id: string, value: number) {
+    this.id = id;
+    this.value = value;
   }
 }
