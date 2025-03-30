@@ -1,5 +1,5 @@
 @BaseUrl = http://localhost:8080
-@CounterId = cygans
+@CounterId = foo-bar
 
 ### Retrieve counter by name
 GET {{BaseUrl}}/counter/{{CounterId}}

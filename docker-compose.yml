@@ -28,6 +28,9 @@ services:
       context: FunctionsWorker
     environment:
       ConnectionStrings__RabbitMq: "amqp://guest:guest@rabbit_mq:5672/"
+      SmtpOptions__FromAddress: ""
+      SmtpOptions__Password: ""
+      SmtpOptions__Password: ""
     depends_on:
       rabbitmq:
         condition: service_healthy

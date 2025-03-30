@@ -1,0 +1,11 @@
+@BaseUrl = http://localhost:7035/api
+
+### Simulate receiving threshold message
+POST {{BaseUrl}}/send-threshold-notification
+Content-Type: application/json
+Accept: application/json
+
+{
+  "CounterId": "rabarbar",
+  "Threshold": 123
+}

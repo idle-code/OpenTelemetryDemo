@@ -662,3 +662,4 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/rider,aspnetcore,dotnetcore,csharp,angular,azurefunctions,azurite
 
 nohup.out
+docker-compose.override.yml
