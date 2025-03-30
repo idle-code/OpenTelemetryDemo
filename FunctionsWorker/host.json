@@ -16,7 +16,7 @@
     "rabbitMQ": {
         "prefetchCount": 100,
         "queueName": "thresholds",
-        "connectionString": "amqp://guest:guest@localhost:5672",
+        "connectionString": "amqp://guest:guest@rabarbar:5672",
         "port": 5672
     }
 }

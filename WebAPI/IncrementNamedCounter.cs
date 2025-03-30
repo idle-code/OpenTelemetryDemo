@@ -50,15 +50,27 @@ internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCoun
         counter.Value += request.Delta;
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        if (oldValue < Threshold && counter.Value >= Threshold)
+        var reachedThreshold = GetThresholdReached(oldValue, counter.Value);
+        if (reachedThreshold is not null)
         {
-            _logger.LogWarning("Counting threshold {ThresholdValue} reached - notifying authorities", Threshold);
-
-            var message = new ThresholdReachedMessage(counter.Id, Threshold);
+            _logger.LogWarning("Counting threshold {ThresholdValue} reached - notifying authorities", reachedThreshold);
+            var message = new ThresholdReachedMessage(counter.Id, reachedThreshold.Value);
             await PublishMessage(message, cancellationToken);
         }
 
         return counter;
+    }
+
+    private int? GetThresholdReached(int oldValue, int newValue)
+    {
+        var threshold = (newValue / Threshold) * Threshold;
+        _logger.LogDebug("Checking if {NewVale} reached threshold {Threshold}", newValue, threshold);
+        if (oldValue >= threshold || newValue < threshold)
+        {
+            return null;
+        }
+
+        return threshold;
     }
 
     private async ValueTask PublishMessage(ThresholdReachedMessage message, CancellationToken cancellationToken)

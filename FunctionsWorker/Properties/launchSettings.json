@@ -5,7 +5,7 @@
       "commandLineArgs": "--port 7035",
       "launchBrowser": false,
       "environmentVariables": {
-        "RABBIT_MQ": "url"
+
       }
     }
   }

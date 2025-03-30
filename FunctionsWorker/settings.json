@@ -3,6 +3,6 @@
     "Values": {
         "AzureWebJobsStorage": "UseDevelopmentStorage=true",
         "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-        "ConnectionStrings__RabbitMq": "amqp://guest:guest@rabbitmq:5672/"
+        "ConnectionStrings__RabbitMq": "amqp://guest:guest@rabbit_mq:5672"
     }
 }
