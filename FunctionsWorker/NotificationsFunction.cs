@@ -56,7 +56,7 @@ public class NotificationFunction
     {
         var smtp = new SmtpClient
         {
-            Host = _smtpOptions.SmtpServer,
+            Host = _smtpOptions.Server,
             Port = 587,
             EnableSsl = true,
             DeliveryMethod = SmtpDeliveryMethod.Network,
