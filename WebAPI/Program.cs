@@ -16,10 +16,7 @@ builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy =>
     policy.AllowAnyOrigin();
 }));
 
-builder.Services.AddMediatR(config =>
-{
-    config.RegisterServicesFromAssemblyContaining<IncrementNamedCounterHandler>();
-});
+builder.Services.AddMediatR(config => { config.RegisterServicesFromAssemblyContaining<IncrementNamedCounterHandler>(); });
 
 // builder.Services.AddEasyNetQ();
 
@@ -49,21 +46,28 @@ var app = builder.Build();
 
 app.UseCors();
 
+#region endpoints
+
 app.MapGet("/counter/{id}", async (
-    [FromRoute] string id,
-    IMediator mediator,
-    CancellationToken cancellationToken) =>
-{
-    var counter = await mediator.Send(new GetNamedCounter(id), cancellationToken);
-    return counter is null ? Results.NotFound() : Results.Ok(counter);
-})
-.Produces<NamedCounter?>();
+        [FromRoute] string id,
+        IMediator mediator,
+        CancellationToken cancellationToken) =>
+    {
+        var counter = await mediator.Send(new GetNamedCounter(id), cancellationToken);
+        return counter is null ? Results.NotFound() : Results.Ok(counter);
+    })
+    .Produces<NamedCounter?>();
 
 app.MapPost("/counter/{id}/increment", async (
-    [FromRoute] string id,
-    [FromBody] int byValue,
-    IMediator mediator,
-    CancellationToken cancellationToken) => await mediator.Send(new IncrementNamedCounter(id, byValue), cancellationToken))
+        [FromRoute] string id,
+        [FromBody] int byValue,
+        IMediator mediator,
+        CancellationToken cancellationToken) =>
+    {
+        return await mediator.Send(new IncrementNamedCounter(id, byValue), cancellationToken);
+    })
     .Produces<NamedCounter>();
+
+#endregion
 
 app.Run();
