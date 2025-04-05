@@ -1,3 +1,4 @@
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,24 +19,31 @@ builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy =>
 
 builder.Services.AddMediatR(config => { config.RegisterServicesFromAssemblyContaining<IncrementNamedCounterHandler>(); });
 
-// builder.Services.AddEasyNetQ();
-
 builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(services =>
 {
     var connectionString = services.GetRequiredService<IConfiguration>().GetConnectionString("RabbitMq")!;
-
     return new ConnectionFactory
     {
         Endpoint = new AmqpTcpEndpoint(new Uri(connectionString)),
-        // UserName = null,
-        // Password = null,
-        // Uri = null,
-        // ClientProvidedName = null
     };
 });
 
 var connectionString = builder.Configuration.GetConnectionString("TheButton")!;
 builder.Services.AddDbContext<TheButtonDbContext>(opt => opt.UseNpgsql(connectionString));
+
+#region opentelemetry-setup
+
+var otel = builder.Services.AddOpenTelemetry();
+otel.WithLogging()
+    .WithTracing()
+    .WithMetrics();
+
+if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
+{
+    otel.UseAzureMonitor();
+}
+
+#endregion
 
 var app = builder.Build();
 

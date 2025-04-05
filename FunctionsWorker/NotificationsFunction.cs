@@ -54,6 +54,9 @@ public class NotificationFunction
 
     private async ValueTask SendEmail(string toAddress, string subject, string body, CancellationToken cancellationToken)
     {
+        using var _ = _logger.BeginScope(new Dictionary<string, object> { { "Subject", subject } });
+        _logger.LogInformation("Sending email to {ToAddress}", toAddress);
+
         var smtp = new SmtpClient
         {
             Host = _smtpOptions.Server,

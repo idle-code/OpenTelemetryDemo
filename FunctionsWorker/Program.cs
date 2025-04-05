@@ -1,3 +1,4 @@
+using Azure.Monitor.OpenTelemetry.Exporter;
 using FunctionsWorker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,24 @@ builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(nameof(
 // builder.Services
 //     .AddApplicationInsightsTelemetryWorkerService()
 //     .ConfigureFunctionsApplicationInsights();
+
+#region opentelemetry-setup
+
+var otel = builder.Services.AddOpenTelemetry();
+otel.WithLogging()
+    .WithTracing()
+    .WithMetrics();
+
+var applicationInsightsConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+if (!string.IsNullOrEmpty(applicationInsightsConnectionString))
+{
+    otel.UseAzureMonitorExporter(options =>
+    {
+        options.ConnectionString = applicationInsightsConnectionString;
+    });
+}
+
+#endregion
 
 var app = builder.Build();
 
