@@ -7,6 +7,9 @@ using RabbitMQ.Client;
 using WebAPI;
 using WebAPI.Model;
 using EasyNetQ;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +20,8 @@ builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy =>
     policy.AllowAnyOrigin();
 }));
 
-builder.Services.AddMediatR(config => { config.RegisterServicesFromAssemblyContaining<IncrementNamedCounterHandler>(); });
+builder.Services.AddMediatR(
+    config => { config.RegisterServicesFromAssemblyContaining<IncrementNamedCounterHandler>(); });
 
 builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(services =>
 {
@@ -32,17 +36,26 @@ var connectionString = builder.Configuration.GetConnectionString("TheButton")!;
 builder.Services.AddDbContext<TheButtonDbContext>(opt => opt.UseNpgsql(connectionString));
 
 #region opentelemetry-setup
-
 var otel = builder.Services.AddOpenTelemetry();
-otel.WithLogging()
-    .WithTracing()
-    .WithMetrics();
+otel
+    .ConfigureResource(resource => resource
+        .AddService("WebAPI"))
+    .WithLogging()
+    .WithTracing(tracing => tracing
+        .AddHttpClientInstrumentation()
+        .AddAspNetCoreInstrumentation()
+        .AddSqlClientInstrumentation()
+        .AddGrpcClientInstrumentation()
+        .AddEntityFrameworkCoreInstrumentation())
+    .WithMetrics(metrics => metrics
+        .AddHttpClientInstrumentation()
+        .AddAspNetCoreInstrumentation()
+        .AddSqlClientInstrumentation());
 
 if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
 {
     otel.UseAzureMonitor();
 }
-
 #endregion
 
 var app = builder.Build();

@@ -4,6 +4,9 @@ using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 builder.ConfigureFunctionsWebApplication();
@@ -22,9 +25,16 @@ builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(nameof(
 #region opentelemetry-setup
 
 var otel = builder.Services.AddOpenTelemetry();
-otel.WithLogging()
-    .WithTracing()
-    .WithMetrics();
+otel
+    .ConfigureResource(resource => resource
+        .AddService("FunctionsWorker"))
+    .WithLogging()
+    .WithTracing(tracing => tracing
+        .AddHttpClientInstrumentation())
+    .WithMetrics(metrics => metrics
+        .AddHttpClientInstrumentation()
+        .AddProcessInstrumentation()
+        .AddRuntimeInstrumentation());
 
 var applicationInsightsConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
 if (!string.IsNullOrEmpty(applicationInsightsConnectionString))
