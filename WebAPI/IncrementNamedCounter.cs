@@ -1,30 +1,27 @@
-using System.Text;
-using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RabbitMQ.Client;
 using WebAPI.Model;
 
 namespace WebAPI;
 
 internal record IncrementNamedCounter(string CounterId, int Delta) : IRequest<NamedCounter>;
 
-internal record ThresholdReachedMessage(string CounterId, int Threshold);
-
 internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCounter, NamedCounter>
 {
     const int Threshold = 10;
-    private const string ThresholdsQueueName = "thresholds";
 
     private readonly ILogger<IncrementNamedCounterHandler> _logger;
     private readonly TheButtonDbContext _dbContext;
-    private readonly IConnectionFactory _rabbitConnectionFactory;
+    private readonly MessagePublisher _messagePublisher;
 
-    public IncrementNamedCounterHandler(ILogger<IncrementNamedCounterHandler> logger, TheButtonDbContext dbContext, IConnectionFactory rabbitConnectionFactory)
+    public IncrementNamedCounterHandler(
+        ILogger<IncrementNamedCounterHandler> logger,
+        TheButtonDbContext dbContext,
+        MessagePublisher messagePublisher)
     {
         _logger = logger;
         _dbContext = dbContext;
-        _rabbitConnectionFactory = rabbitConnectionFactory;
+        _messagePublisher = messagePublisher;
     }
 
     public async Task<NamedCounter> Handle(IncrementNamedCounter request, CancellationToken cancellationToken)
@@ -55,7 +52,7 @@ internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCoun
         {
             _logger.LogWarning("Counting threshold {ThresholdValue} reached - notifying authorities", reachedThreshold);
             var message = new ThresholdReachedMessage(counter.Id, reachedThreshold.Value);
-            await PublishMessage(message, cancellationToken);
+            await _messagePublisher.PublishMessage(message, cancellationToken);
         }
 
         return counter;
@@ -71,26 +68,5 @@ internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCoun
         }
 
         return threshold;
-    }
-
-    private async ValueTask PublishMessage(ThresholdReachedMessage message, CancellationToken cancellationToken)
-    {
-        await using var rabbitConnection = await _rabbitConnectionFactory.CreateConnectionAsync(cancellationToken);
-        await using var channel = await rabbitConnection.CreateChannelAsync(cancellationToken: cancellationToken);
-        await channel.QueueDeclareAsync(
-            queue: ThresholdsQueueName,
-            durable: false,
-            exclusive: false,
-            autoDelete: false,
-            arguments: null,
-            cancellationToken: cancellationToken);
-
-        var messageJson = JsonSerializer.Serialize(message);
-        var messageBytes = Encoding.UTF8.GetBytes(messageJson);
-        await channel.BasicPublishAsync(
-            exchange: string.Empty,
-            routingKey: ThresholdsQueueName,
-            messageBytes,
-            cancellationToken: cancellationToken);
     }
 }

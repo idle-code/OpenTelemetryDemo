@@ -30,7 +30,8 @@ otel
         .AddService("FunctionsWorker"))
     .WithLogging()
     .WithTracing(tracing => tracing
-        .AddHttpClientInstrumentation())
+        .AddHttpClientInstrumentation()
+        .AddSource("FunctionsWorker.*"))
     .WithMetrics(metrics => metrics
         .AddHttpClientInstrumentation()
         .AddProcessInstrumentation()

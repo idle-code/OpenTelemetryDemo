@@ -2,11 +2,9 @@ using Azure.Monitor.OpenTelemetry.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using WebAPI;
 using WebAPI.Model;
-using EasyNetQ;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -31,6 +29,7 @@ builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(services =>
         Endpoint = new AmqpTcpEndpoint(new Uri(connectionString)),
     };
 });
+builder.Services.AddScoped<MessagePublisher>();
 
 var connectionString = builder.Configuration.GetConnectionString("TheButton")!;
 builder.Services.AddDbContext<TheButtonDbContext>(opt => opt.UseNpgsql(connectionString));
@@ -46,7 +45,8 @@ otel
         .AddAspNetCoreInstrumentation()
         .AddSqlClientInstrumentation()
         .AddGrpcClientInstrumentation()
-        .AddEntityFrameworkCoreInstrumentation())
+        .AddEntityFrameworkCoreInstrumentation()
+        .AddSource("WebAPI.*"))
     .WithMetrics(metrics => metrics
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
