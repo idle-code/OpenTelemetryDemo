@@ -19,7 +19,11 @@ builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy =>
 }));
 
 builder.Services.AddMediatR(
-    config => { config.RegisterServicesFromAssemblyContaining<IncrementNamedCounterHandler>(); });
+    config =>
+    {
+        config.RegisterServicesFromAssemblyContaining<IncrementNamedCounterHandler>();
+    })
+    .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
 
 builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(services =>
 {
