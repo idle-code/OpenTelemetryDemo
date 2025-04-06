@@ -9,8 +9,12 @@ export class WebApiService {
   constructor(private webApi: HttpClient) {
   }
 
-  incrementCounter(id: string): Observable<NamedCounter> {
-    return this.webApi.post<NamedCounter>(`/counter/${id}/increment`, 1);
+  incrementCounter(counterName: string): Observable<NamedCounter> {
+    return this.webApi.post<NamedCounter>(`/counter/${counterName}/increment`, 1);
+  }
+
+  getCounterValue(counterName: string) {
+    return this.webApi.get<number>(`/counter/${counterName}`);
   }
 }
 

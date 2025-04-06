@@ -1,11 +1,16 @@
 import { Component, signal } from '@angular/core';
 import { WebApiService } from "../web-api.service";
+import { FormsModule } from "@angular/forms";
 
 @Component({
     selector: 'app-push-counter',
-    imports: [],
+    imports: [
+        FormsModule
+    ],
     template: `
         <div>
+            <label for="counterName">Counter name:</label><br/>
+            <input id="counterName" [(ngModel)]="PushCounterName" (change)="UpdateCounter($event)"/><br/>
             <label for="incrementButton">Current clicks: {{ PushCounter() }}</label><br/>
             <button id="incrementButton" (click)="RegisterPush()">Push me!</button>
         </div>
@@ -13,15 +18,24 @@ import { WebApiService } from "../web-api.service";
     styleUrl: './push-counter.component.scss'
 })
 export class PushCounterComponent {
+    PushCounterName = "rabarbar";
     PushCounter = signal<number>(0);
 
     constructor(private webApi: WebApiService) {
         this.webApi = webApi;
     }
 
+    UpdateCounter(changeEvent: Event)
+    {
+        console.log(`Fetching current value of ${this.PushCounterName}`);
+        this.webApi.getCounterValue(this.PushCounterName).subscribe(counterValue => {
+            this.PushCounter.set(counterValue);
+        });
+    }
+
     RegisterPush() {
         console.log("RegisterPush executed");
-        this.webApi.incrementCounter("rabarbarowany").subscribe(namedCounter => {
+        this.webApi.incrementCounter(this.PushCounterName).subscribe(namedCounter => {
             this.PushCounter.set(namedCounter.value);
         });
     }
