@@ -28,9 +28,15 @@ export class PushCounterComponent {
     UpdateCounter(changeEvent: Event)
     {
         console.log(`Fetching current value of ${this.PushCounterName}`);
-        this.webApi.getCounterValue(this.PushCounterName).subscribe(counterValue => {
-            this.PushCounter.set(counterValue);
-        });
+        this.webApi.getCounterValue(this.PushCounterName).subscribe({
+                next: namedCounter => {
+                    this.PushCounter.set(namedCounter.value);
+                },
+                error: err => {
+                    this.PushCounter.set(0);
+                }
+            }
+        );
     }
 
     RegisterPush() {

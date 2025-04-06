@@ -14,7 +14,7 @@ export class WebApiService {
   }
 
   getCounterValue(counterName: string) {
-    return this.webApi.get<number>(`/counter/${counterName}`);
+    return this.webApi.get<NamedCounter>(`/counter/${counterName}`);
   }
 }
 
