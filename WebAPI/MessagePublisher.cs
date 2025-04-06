@@ -62,11 +62,11 @@ public class MessagePublisher
         activity.SetTag("messaging.destination_kind", "queue");
         activity.SetTag("messaging.rabbitmq.queue", ThresholdsQueueName);
         activity.SetTag("messaging.system", "rabbitmq");
-        Propagator.Inject(new PropagationContext(activity.Context, Baggage.Current), props, InjectContextTags);
+        Propagator.Inject(new PropagationContext(activity.Context, Baggage.Current), props, InjectContextTagsIntoMessageProperties);
         return props;
     }
 
-    private static void InjectContextTags(IBasicProperties props, string key, string value)
+    private static void InjectContextTagsIntoMessageProperties(IBasicProperties props, string key, string value)
     {
         props.Headers ??= new Dictionary<string, object?>();
         props.Headers[key] = value;

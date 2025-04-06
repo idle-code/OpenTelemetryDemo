@@ -56,13 +56,13 @@ public class NotificationFunction
     private Activity? ExtractTracingContext(Dictionary<string, JsonNode?> context)
     {
         var headersObject = (JsonObject)context["Headers"]!;
-        var parentContext = Propagator.Extract(default, headersObject, ExtractContextTags);
+        var parentContext = Propagator.Extract(default, headersObject, ExtractContextTagsFromMessageProperties);
         Baggage.Current = parentContext.Baggage;
 
         return ActivitySource.StartActivity("RabbitMQ Receiver", ActivityKind.Consumer, parentContext.ActivityContext);
     }
 
-    private IEnumerable<string> ExtractContextTags(JsonObject? messageHeaders, string headerKey)
+    private IEnumerable<string> ExtractContextTagsFromMessageProperties(JsonObject? messageHeaders, string headerKey)
     {
         try
         {
@@ -88,7 +88,9 @@ public class NotificationFunction
     private async ValueTask SendNotification(ThresholdReachedMessage message, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Received {@Message}", message);
-        var tokenUrl = $"http://localhost:8081/confirm?token={UrlEncoder.Default.Encode(message.BonusToken)}";
+        var token = UrlEncoder.Default.Encode(message.BonusToken);
+        var tokenUrl = $"http://localhost:8081/confirm?token={token}";
+        tokenUrl = EnrichWithTraceContext(tokenUrl);
         await SendEmail(
             toAddress: "p.z.idlecode@gmail.com",
             subject: "Threshold reached!",
@@ -100,6 +102,24 @@ public class NotificationFunction
                   </div>
                   """,
             cancellationToken: cancellationToken);
+    }
+
+    private string EnrichWithTraceContext(string url)
+    {
+        var activity = Activity.Current;
+        if (activity is null)
+        {
+            return url;
+        }
+
+        var uriBuilder = new UriBuilder(url);
+        Propagator.Inject(new PropagationContext(activity.Context, Baggage.Current), uriBuilder, InjectContextTagsIntoQueryParams);
+        return uriBuilder.ToString();
+    }
+
+    private void InjectContextTagsIntoQueryParams(UriBuilder url, string key, string value)
+    {
+        url.Query += $"&{key}={UrlEncoder.Default.Encode(value)}";
     }
 
     private async ValueTask SendEmail(string toAddress, string subject, string body, CancellationToken cancellationToken)

@@ -38,6 +38,7 @@ builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(services =>
     };
 });
 builder.Services.AddScoped<MessagePublisher>();
+builder.Services.AddScoped<ContextRetrievingMiddleware>();
 
 var connectionString = builder.Configuration.GetConnectionString("TheButton")!;
 builder.Services.AddDbContext<TheButtonDbContext>(opt => opt.UseNpgsql(connectionString));
@@ -74,6 +75,8 @@ var app = builder.Build();
 }
 
 app.UseCors();
+
+app.UseMiddleware<ContextRetrievingMiddleware>();
 
 #region endpoints
 
