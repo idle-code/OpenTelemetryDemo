@@ -58,17 +58,6 @@ Demo project
 
 <Toc text-sm minDepth="1" maxDepth="2" />
 
----
-
-# Czym jest OpenTelemetry?
-
-<div v-click>
-- Otwarto-źródłowy zestaw narzędzi do obserwacji i zbierania danych telemetrycznych
-</div>
-
-<div v-click>
-- Zestaw ustandaryzowanych API wraz z referencyjną implementacją (SDK) dla wielu języków programowania
-</div>
 
 ---
 src: ./pages/what-is-observability.md
@@ -79,5 +68,17 @@ src: ./pages/what-is-telemetry.md
 ---
 
 ---
+src: ./pages/why-opentelemetry.md
+---
+
+---
 src: ./pages/what-is-opentelemetry.md
+---
+
+---
+src: ./pages/demo-project.md
+---
+
+---
+src: ./pages/otel-dotnet.md
 ---
