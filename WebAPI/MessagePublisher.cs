@@ -7,7 +7,7 @@ using RabbitMQ.Client;
 
 namespace WebAPI;
 
-public record ThresholdReachedMessage(string CounterId, int Threshold);
+public record ThresholdReachedMessage(string CounterId, int Threshold, string BonusToken);
 
 public class MessagePublisher
 {

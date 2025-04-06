@@ -5,6 +5,7 @@ namespace WebAPI.Model;
 public class TheButtonDbContext : DbContext
 {
     public DbSet<NamedCounter> NamedCounters { get; set; }
+    public DbSet<BonusToken> BonusTokens { get; set; }
 
     public TheButtonDbContext(DbContextOptions<TheButtonDbContext> dbContextOptions)
         : base(dbContextOptions)
@@ -23,6 +24,23 @@ public class TheButtonDbContext : DbContext
                 .IsRequired();
 
             counter.ToTable(nameof(NamedCounters), "TheButton");
+        });
+
+        modelBuilder.Entity<BonusToken>(token =>
+        {
+            token.HasKey(t => new { t.CounterId, t.Token });
+            token.Property(t => t.Token)
+                .HasMaxLength(128);
+
+            token.HasOne<NamedCounter>()
+                .WithMany()
+                .HasForeignKey(t => t.CounterId)
+                .HasPrincipalKey(c => c.Id);
+
+            token.Property(t => t.ValidUntil)
+                .IsRequired();
+
+            token.ToTable(nameof(BonusToken), "TheButton");
         });
     }
 }

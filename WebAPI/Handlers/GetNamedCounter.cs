@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Model;
 
-namespace WebAPI;
+namespace WebAPI.Handlers;
 
 internal record GetNamedCounter(string CounterId) : IRequest<NamedCounter?>;
 

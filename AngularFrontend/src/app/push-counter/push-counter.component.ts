@@ -10,7 +10,7 @@ import { FormsModule } from "@angular/forms";
     template: `
         <div>
             <label for="counterName">Counter name:</label><br/>
-            <input id="counterName" [(ngModel)]="PushCounterName" (change)="UpdateCounter($event)"/><br/>
+            <input id="counterName" [(ngModel)]="PushCounterName" (change)="UpdateCounter()"/><br/>
             <label for="incrementButton">Current clicks: {{ PushCounter() }}</label><br/>
             <button id="incrementButton" (click)="RegisterPush()">Push me!</button>
         </div>
@@ -23,9 +23,10 @@ export class PushCounterComponent {
 
     constructor(private webApi: WebApiService) {
         this.webApi = webApi;
+        this.UpdateCounter();
     }
 
-    UpdateCounter(changeEvent: Event)
+    UpdateCounter()
     {
         console.log(`Fetching current value of ${this.PushCounterName}`);
         this.webApi.getCounterValue(this.PushCounterName).subscribe({

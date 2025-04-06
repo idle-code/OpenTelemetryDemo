@@ -1,5 +1,6 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
@@ -8,6 +9,7 @@ using WebAPI.Model;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using WebAPI.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,8 @@ builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy =>
     policy.AllowAnyMethod();
     policy.AllowAnyOrigin();
 }));
+
+builder.Services.AddSingleton(TimeProvider.System);
 
 builder.Services.AddMediatR(
     config =>
@@ -92,6 +96,15 @@ app.MapPost("/counter/{id}/increment", async (
         return await mediator.Send(new IncrementNamedCounter(id, byValue), cancellationToken);
     })
     .Produces<NamedCounter>();
+
+app.MapGet("/confirm", async (
+    [FromQuery] string token,
+    IMediator mediator,
+    CancellationToken cancellationToken) =>
+{
+    var validationSuccessful = await mediator.Send(new ConfirmToken(token), cancellationToken);
+    return validationSuccessful ? Results.Accepted() : Results.BadRequest();
+});
 
 #endregion
 

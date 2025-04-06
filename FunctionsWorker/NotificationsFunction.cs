@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.Azure.Functions.Worker;
@@ -13,7 +14,7 @@ using OpenTelemetry.Context.Propagation;
 
 namespace FunctionsWorker;
 
-public record ThresholdReachedMessage(string CounterId, int Threshold);
+public record ThresholdReachedMessage(string CounterId, int Threshold, string BonusToken);
 
 public class NotificationFunction
 {
@@ -87,10 +88,17 @@ public class NotificationFunction
     private async ValueTask SendNotification(ThresholdReachedMessage message, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Received {@Message}", message);
+        var tokenUrl = $"http://localhost:8081/confirm?token={UrlEncoder.Default.Encode(message.BonusToken)}";
         await SendEmail(
             toAddress: "p.z.idlecode@gmail.com",
             subject: "Threshold reached!",
-            body: "Congrats!",
+            body: $"""
+                  <h1>Congratulations!</h1>
+                  <div>
+                  You've reached {message.Threshold} on {message.CounterId} counter, click the link below to grab additional points:<br/>
+                  <a href="{tokenUrl}">{tokenUrl}</a>
+                  </div>
+                  """,
             cancellationToken: cancellationToken);
     }
 
@@ -110,6 +118,7 @@ public class NotificationFunction
         };
 
         using var message = new MailMessage(_smtpOptions.FromAddress, toAddress);
+        message.IsBodyHtml = true;
         message.Subject = subject;
         message.Body = body;
         await smtp.SendMailAsync(message, cancellationToken);

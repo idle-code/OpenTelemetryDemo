@@ -2,26 +2,29 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Model;
 
-namespace WebAPI;
+namespace WebAPI.Handlers;
 
 internal record IncrementNamedCounter(string CounterId, int Delta) : IRequest<NamedCounter>;
 
 internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCounter, NamedCounter>
 {
     const int Threshold = 10;
+    private static readonly Random Random = new();
 
     private readonly ILogger<IncrementNamedCounterHandler> _logger;
     private readonly TheButtonDbContext _dbContext;
     private readonly MessagePublisher _messagePublisher;
+    private readonly TimeProvider _timeProvider;
 
     public IncrementNamedCounterHandler(
         ILogger<IncrementNamedCounterHandler> logger,
         TheButtonDbContext dbContext,
-        MessagePublisher messagePublisher)
+        MessagePublisher messagePublisher, TimeProvider timeProvider)
     {
         _logger = logger;
         _dbContext = dbContext;
         _messagePublisher = messagePublisher;
+        _timeProvider = timeProvider;
     }
 
     public async Task<NamedCounter> Handle(IncrementNamedCounter request, CancellationToken cancellationToken)
@@ -45,17 +48,34 @@ internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCoun
         _logger.LogInformation("Incrementing {CounterId} counter by {Delta}", request.CounterId, request.Delta);
         var oldValue = counter.Value;
         counter.Value += request.Delta;
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
         var reachedThreshold = GetThresholdReached(oldValue, counter.Value);
         if (reachedThreshold is not null)
         {
-            _logger.LogWarning("Counting threshold {ThresholdValue} reached - notifying authorities", reachedThreshold);
-            var message = new ThresholdReachedMessage(counter.Id, reachedThreshold.Value);
+            _logger.LogWarning("Threshold {ThresholdValue} reached", reachedThreshold);
+
+            _logger.LogDebug("Generating bonus token");
+            var bonusToken = GenerateBonusToken(counter.Id);
+
+            var message = new ThresholdReachedMessage(counter.Id, reachedThreshold.Value, bonusToken);
             await _messagePublisher.PublishMessage(message, cancellationToken);
         }
 
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
         return counter;
+    }
+
+    private string GenerateBonusToken(string counterId)
+    {
+        var token = new BonusToken
+        {
+            Token = Guid.NewGuid().ToString("N"),
+            CounterId = counterId,
+            ValidUntil = _timeProvider.GetUtcNow().AddSeconds(30)
+        };
+        _dbContext.Add(token);
+        return token.Token;
     }
 
     private int? GetThresholdReached(int oldValue, int newValue)
