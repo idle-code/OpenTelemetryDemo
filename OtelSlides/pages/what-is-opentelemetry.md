@@ -25,6 +25,7 @@
 - Ostrzeżenie (błędy walidacji)
 - Błędy działania aplikacji (wyjątki)
 
+
 ---
 
 ## Traces
