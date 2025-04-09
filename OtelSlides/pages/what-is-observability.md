@@ -1,4 +1,5 @@
 # Czym jest obserwowalność?
+
 <br/>
 <br/>
 
@@ -26,3 +27,13 @@
 
 </v-click>
 
+---
+layout: center
+---
+
+<v-switch>
+<template #0><img src="./maze.png" /></template>
+<template #1><img src="./maze-with-point.png" /></template>
+<template #2><img src="./maze-with-path.png" /></template>
+<template #3><img src="./maze-solved-with-path.png" /></template>
+</v-switch>

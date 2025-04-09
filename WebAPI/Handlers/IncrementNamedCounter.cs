@@ -29,25 +29,21 @@ internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCoun
 
     public async Task<NamedCounter> Handle(IncrementNamedCounter request, CancellationToken cancellationToken)
     {
-        using var _ = _logger.BeginScope(new Dictionary<string, object>
-        {
-            { "CounterId", request.CounterId }
-        });
+        #region handle-method
+        using var _ = _logger.PushProperty("CounterId", request.CounterId);
 
         var counter = await _dbContext.NamedCounters.SingleOrDefaultAsync(counter => counter.Id == request.CounterId, cancellationToken);
         if (counter is null)
         {
             _logger.LogInformation("No existing counter found - creating a new one");
-            counter = new NamedCounter
-            {
-                Id = request.CounterId
-            };
+            counter = new NamedCounter { Id = request.CounterId };
             _dbContext.NamedCounters.Add(counter);
         }
 
         _logger.LogInformation("Incrementing {CounterId} counter by {Delta}", request.CounterId, request.Delta);
         var oldValue = counter.Value;
         counter.Value += request.Delta;
+        #endregion
 
         var reachedThreshold = GetThresholdReached(oldValue, counter.Value);
         if (reachedThreshold is not null)

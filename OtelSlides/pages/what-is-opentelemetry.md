@@ -2,7 +2,7 @@
 
 <v-clicks>
 
-- Protokół wymiany danych OTEL
+- Protokół wymiany danych OTLP
 - Konwencje nazewnicze
 - Wskazówki odnośnie API
 - SDK dla poszczególnych języków programowania
@@ -14,45 +14,90 @@
 
 ---
 
-# Rodzaje sygnałów
+# OpenTelemetry Pipeline
 
----
+<div align="center" style="align-content: center">
+<v-switch>
 
-## Logs
-### Krótkie wiadomości tekstowe generowane w czasie uruchamiania kodu
+<template #0>
+```mermaid {scale: 0.7}
+graph TD;
+    app["Application"]
+    apm["APM"]
+    
+    app --> apm
+```
+</template>
 
-- Decyzja podjęta przez aplikację
-- Ostrzeżenie (błędy walidacji)
-- Błędy działania aplikacji (wyjątki)
+<template #1>
+```mermaid {scale: 0.7}
+graph TD;
+    subgraph app["Application"]
+        logs["Logs"]
+        traces["Traces"]
+        metrics["Metrics"]
+        processors["Processors"]
+        exporters["Exporters"]
+        
+        logs --> processors
+        traces --> processors
+        metrics --> processors
+        processors --> exporters
+    end
+    apm["APM"]
+    
+    exporters -- "OTLP" --> apm
+```
+</template>
 
+<template #2>
+```mermaid {scale: 0.6}
+graph TD;
+    subgraph app["Application"]
+        logs["Logs"]
+        traces["Traces"]
+        metrics["Metrics"]
+        processors["Processors"]
+        exporter["Exporter"]
+        
+        logs --> processors
+        traces --> processors
+        metrics --> processors
+        processors --> exporter
+    end
+    
+    exporter -- "OTLP" --> collector
+    
+    subgraph collector["OpenTelemetry Collector"]
+        collectorProcessor["Processors"]
+        collectorExporters["Exporters"]
+        
+        collectorProcessor --> collectorExporters
+    end
+    
+    apm["APM"]
+    
+    collectorExporters -- "OTLP" --> apm
+```
+</template>
 
----
+<template #3>
+```mermaid {scale: 0.7}
+graph TD;
+    subgraph app["OTEL Pipeline"]
+        logs["Logs"]
+        traces["Traces"]
+        metrics["Metrics"]
+        processors["Processors"]
+        exporters["Exporters"]
+        
+        logs --> processors
+        traces --> processors
+        metrics --> processors
+        processors --> exporters
+    end
+```
+</template>
 
-## Traces
-### Akcje wykonywane przez aplikację
-
-- Zapytanie HTTP
-- Zdarzenie
-- Interakcja użytkownika
-
----
-
-
-## Metrics
-### Liczniki reprezentujące aktualny stan systemu
-
-- Liczba obsłużonych zapytań
-- Poziom użycia pamięci
-- Opóźnienia obsługiwanych zapytań
-
----
-
-# Processors
-Next slide content
-
-You can split your slides.md into multiple files and organize them as you want using the `src` attribute.
-
----
-
-# Exporters
-Perhaps
+</v-switch>
+</div>
