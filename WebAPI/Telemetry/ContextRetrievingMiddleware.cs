@@ -1,15 +1,13 @@
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Web;
-using Microsoft.AspNetCore.Http.Extensions;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
 
-namespace WebAPI;
+namespace WebAPI.Telemetry;
 
 public class ContextRetrievingMiddleware : IMiddleware
 {
-    private static readonly ActivitySource ActivitySource = new(typeof(ContextRetrievingMiddleware).FullName!);
     private static readonly TextMapPropagator Propagator = Propagators.DefaultTextMapPropagator;
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)

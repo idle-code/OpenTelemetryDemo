@@ -10,6 +10,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using WebAPI.Handlers;
+using WebAPI.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,7 @@ builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(services =>
 });
 builder.Services.AddScoped<MessagePublisher>();
 builder.Services.AddScoped<ContextRetrievingMiddleware>();
+builder.Services.AddSingleton<CounterMetrics>();
 
 var connectionString = builder.Configuration.GetConnectionString("TheButton")!;
 builder.Services.AddDbContext<TheButtonDbContext>(opt => opt.UseNpgsql(connectionString));
@@ -55,17 +57,20 @@ otel
         .AddSqlClientInstrumentation()
         .AddGrpcClientInstrumentation()
         .AddEntityFrameworkCoreInstrumentation()
-        .AddSource("WebAPI.*"))
+        .AddSource("WebAPI.*")
+        .AddProcessor<BaggageEnrichingProcessor>())
     .WithMetrics(metrics => metrics
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
-        .AddSqlClientInstrumentation());
+        .AddSqlClientInstrumentation()
+        .AddMeter("WebAPI.*"));
+#endregion
 
 if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
 {
     otel.UseAzureMonitor();
 }
-#endregion
+
 
 var app = builder.Build();
 

@@ -1,5 +1,6 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
 using FunctionsWorker;
+using FunctionsWorker.Telemetry;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +18,7 @@ builder.Services.AddSingleton(smtpOptions!);
 
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(nameof(SmtpOptions)));
 
-// Application Insights isn't enabled by default. See https://aka.ms/AAt8mw4.
-// builder.Services
-//     .AddApplicationInsightsTelemetryWorkerService()
-//     .ConfigureFunctionsApplicationInsights();
-
 #region opentelemetry-setup
-
 var otel = builder.Services.AddOpenTelemetry();
 otel
     .ConfigureResource(resource => resource
@@ -31,11 +26,15 @@ otel
     .WithLogging()
     .WithTracing(tracing => tracing
         .AddHttpClientInstrumentation()
-        .AddSource("FunctionsWorker.*"))
+        .AddSource("FunctionsWorker.*")
+        .AddProcessor<BaggageEnrichingProcessor>()
+    )
     .WithMetrics(metrics => metrics
         .AddHttpClientInstrumentation()
         .AddProcessInstrumentation()
-        .AddRuntimeInstrumentation());
+        .AddRuntimeInstrumentation()
+        .AddMeter("FunctionsWorker.*"));
+#endregion
 
 var applicationInsightsConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
 if (!string.IsNullOrEmpty(applicationInsightsConnectionString))
@@ -45,8 +44,6 @@ if (!string.IsNullOrEmpty(applicationInsightsConnectionString))
         options.ConnectionString = applicationInsightsConnectionString;
     });
 }
-
-#endregion
 
 var app = builder.Build();
 

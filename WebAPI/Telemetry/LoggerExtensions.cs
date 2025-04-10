@@ -1,4 +1,4 @@
-namespace WebAPI;
+namespace WebAPI.Telemetry;
 
 public static class LoggerExtensions
 {

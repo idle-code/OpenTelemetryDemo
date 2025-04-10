@@ -2,23 +2,24 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using MediatR;
-using Microsoft.AspNetCore.Routing.Matching;
 using OpenTelemetry;
 
-namespace WebAPI;
+namespace WebAPI.Telemetry;
 
 public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
-    private static readonly ActivitySource ActivitySource = new(typeof(LoggingPipelineBehavior<TRequest, TResponse>).FullName!);
+    #region logging-behavior
+    private static readonly ActivitySource ActivitySource
+        = new(typeof(LoggingPipelineBehavior<TRequest, TResponse>).FullName!);
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(
+        TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var requestTypeName = typeof(TRequest).Name;
         using var activity = ActivitySource.StartActivity($"Handling {requestTypeName}", ActivityKind.Internal);
 
-        var jsonRequest = (JsonObject)JsonNode.Parse(JsonSerializer.Serialize(request))!;
-        var requestTags = ToKeyValuePairs(jsonRequest).ToList();
+        var requestTags = ToKeyValuePairs(request);
         foreach (var (key, value) in requestTags)
         {
             activity?.SetTag(key, value);
@@ -28,6 +29,14 @@ public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TR
         // TODO: Use baggage to populate traces
 
         return await next();
+    }
+
+    #endregion
+
+    private List<KeyValuePair<string,string?>> ToKeyValuePairs(TRequest request)
+    {
+        var jsonRequest = (JsonObject)JsonNode.Parse(JsonSerializer.Serialize(request))!;
+        return ToKeyValuePairs(jsonRequest).ToList();
     }
 
     private IEnumerable<KeyValuePair<string,string?>> ToKeyValuePairs(JsonObject jsonObject, string parentKey = "request")

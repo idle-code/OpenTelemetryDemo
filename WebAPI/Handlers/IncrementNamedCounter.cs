@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Model;
+using WebAPI.Telemetry;
 
 namespace WebAPI.Handlers;
 
@@ -15,16 +16,20 @@ internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCoun
     private readonly TheButtonDbContext _dbContext;
     private readonly MessagePublisher _messagePublisher;
     private readonly TimeProvider _timeProvider;
+    private readonly CounterMetrics _counterMetrics;
 
     public IncrementNamedCounterHandler(
         ILogger<IncrementNamedCounterHandler> logger,
         TheButtonDbContext dbContext,
-        MessagePublisher messagePublisher, TimeProvider timeProvider)
+        MessagePublisher messagePublisher,
+        TimeProvider timeProvider,
+        CounterMetrics counterMetrics)
     {
         _logger = logger;
         _dbContext = dbContext;
         _messagePublisher = messagePublisher;
         _timeProvider = timeProvider;
+        _counterMetrics = counterMetrics;
     }
 
     public async Task<NamedCounter> Handle(IncrementNamedCounter request, CancellationToken cancellationToken)
@@ -43,6 +48,7 @@ internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCoun
         _logger.LogInformation("Incrementing {CounterId} counter by {Delta}", request.CounterId, request.Delta);
         var oldValue = counter.Value;
         counter.Value += request.Delta;
+        _counterMetrics.CounterIncrement(counter.Id, request.Delta);
         #endregion
 
         var reachedThreshold = GetThresholdReached(oldValue, counter.Value);
