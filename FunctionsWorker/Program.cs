@@ -5,6 +5,7 @@ using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -33,17 +34,9 @@ otel
         .AddHttpClientInstrumentation()
         .AddProcessInstrumentation()
         .AddRuntimeInstrumentation()
-        .AddMeter("FunctionsWorker.*"));
+        .AddMeter("FunctionsWorker.*"))
+    .UseOtlpExporter();;
 #endregion
-
-var applicationInsightsConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
-if (!string.IsNullOrEmpty(applicationInsightsConnectionString))
-{
-    otel.UseAzureMonitorExporter(options =>
-    {
-        options.ConnectionString = applicationInsightsConnectionString;
-    });
-}
 
 var app = builder.Build();
 

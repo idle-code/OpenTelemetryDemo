@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry;
 using RabbitMQ.Client;
 using WebAPI;
 using WebAPI.Model;
@@ -63,14 +64,9 @@ otel
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
         .AddSqlClientInstrumentation()
-        .AddMeter("WebAPI.*"));
+        .AddMeter("WebAPI.*"))
+    .UseOtlpExporter();
 #endregion
-
-if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
-{
-    otel.UseAzureMonitor();
-}
-
 
 var app = builder.Build();
 
