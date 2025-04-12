@@ -11,25 +11,39 @@
 -->
 
 ---
-
-# Rodzaje sygnałów
-
----
-src: ./logs.md
+layout: section
 ---
 
+# Sygnały
+
+[//]: # (| Logi                                                              | Ślady                                                             | Metryki                                                           |)
+
+[//]: # (|:------------------------------------------------------------------|-------------------------------------------------------------------|-------------------------------------------------------------------|)
+
+[//]: # (| Krótkie wiadomości tekstowe generowane w czasie uruchamiania kodu | Krótkie wiadomości tekstowe generowane w czasie uruchamiania kodu | Krótkie wiadomości tekstowe generowane w czasie uruchamiania kodu |)
+
+[//]: # (| - Decyzja podjęta przez aplikację                                 |                                                                   |                                                                   |)
+
+[//]: # (| - Ostrzeżenie &#40;błędy walidacji&#41;                                   |                                                                   |                                                                   |)
+
+[//]: # (| Błędy działania aplikacji &#40;wyjątki&#41;                               |                                                                   |                                                                   |)
+
 ---
-src: ./traces.md
+src: ./otel-logs.md
 ---
 
 ---
-src: ./metrics.md
+src: ./otel-traces.md
 ---
 
 ---
-src: ./processors.md
+src: ./otel-metrics.md
 ---
 
 ---
-src: ./exporters.md
+src: ./otel-processors.md
+---
+
+---
+src: ./otel-exporters.md
 ---

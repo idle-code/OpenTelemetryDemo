@@ -4,9 +4,18 @@ transition: fade
 
 # Projekt demo
 
+<iframe width="100%" height="80%" src="http://localhost:8080/"></iframe>
+
+---
+hideInToc: true
+transition: fade
+---
+
+# Projekt demo
+
 <v-switch>
 
-<template #1>
+<template #0>
 <div align="center">
 
 ```mermaid
@@ -24,7 +33,7 @@ graph LR;
 </div>
 </template>
 
-<template #2>
+<template #1>
 <div align="center">
 
 ```mermaid
@@ -43,7 +52,7 @@ graph LR;
 </div>
 </template>
 
-<template #3>
+<template #2>
 <div align="center">
 
 ```mermaid
@@ -63,7 +72,7 @@ graph LR;
 </div>
 </template>
 
-<template #4>
+<template #3>
 <div align="center">
 
 ```mermaid
@@ -85,7 +94,7 @@ graph LR;
 </div>
 </template>
 
-<template #5>
+<template #4>
 <div align="center">
 
 ```mermaid

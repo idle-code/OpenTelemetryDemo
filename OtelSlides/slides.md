@@ -1,7 +1,7 @@
 ---
 # You can also start simply with 'default'
 theme: seriph
-background: https://cover.sli.dev
+background: ./cover.jpg
 # some information about your slides (markdown enabled)
 title: OpenTelemetry w .NET
 info: |

@@ -71,8 +71,10 @@ graph TD;
 -->
 
 ---
+hideInToc: true
+---
 
-### Bonus slide: Redneck APM
+# Bonus: Redneck APM
 
 ```csharp
 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(SendExceptionDetails);
@@ -92,7 +94,7 @@ static void SendExceptionDetails(object sender, UnhandledExceptionEventArgs args
     {
         Credentials = new System.Net.NetworkCredential("support@xxx.eu", "<the password>"),
         Host = "mail.xxx.eu",
-        Port = 25 //587
+        Port = 25
     };
     
     smtp_client.Send(error_message);

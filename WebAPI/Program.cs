@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry.Logs;
 using RabbitMQ.Client;
 using WebAPI;
 using WebAPI.Model;
@@ -50,7 +51,8 @@ var otel = builder.Services.AddOpenTelemetry();
 otel
     .ConfigureResource(resource => resource
         .AddService("WebAPI"))
-    .WithLogging()
+    .WithLogging(logging => logging
+        .AddConsoleExporter())
     .WithTracing(tracing => tracing
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
