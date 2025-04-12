@@ -13,14 +13,25 @@ Operacje wykonywane przez aplikację
 </v-clicks>
 
 ---
+hideInToc: true
+transition: fade
+---
 
 ## .NET Tracing
 
-<v-clicks>
+- `WithTracing()`: opentelemetry-dotnet SDK rejestruje `ActivityListener` do wskazanych `ActivitySource`s
+
+<<< ../../WebAPI/Program.cs#opentelemetry-setup {*|7-15|13}{lines:true}
+
+---
+hideInToc: true
+---
+
+## .NET Tracing
 
 <div>
 
-- `WithTracing()`: opentelemetry-dotnet SDK subskrybuje się do wskazanych `ActivitySource`s
+- `WithTracing()`: opentelemetry-dotnet SDK rejestruje `ActivityListener` do wskazanych `ActivitySource`s
 
 </div>
 
@@ -33,6 +44,8 @@ private static readonly ActivitySource ActivitySource
         = new(typeof(LoggingPipelineBehavior<TRequest, TResponse>).FullName!);
 ```
 </div>
+
+<v-clicks>
 
 <div>
 
@@ -61,6 +74,7 @@ using var activity = ActivitySource.StartActivity($"Handling {requestTypeName}",
 </v-clicks>
 
 <!--
+- sampling
 - ActivitySource:
   - factory do tworzenia Activities
   - przestrzeń nazw
@@ -86,10 +100,6 @@ public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TR
   - porównanie do middleware
 
 -->
-
----
-
-<<< ../../WebAPI/Program.cs#opentelemetry-setup {*|7-15|13}{lines:true}
 
 ---
 transition: fade
