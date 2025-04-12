@@ -12,7 +12,6 @@ Krótkie wiadomości tekstowe generowane w czasie uruchamiania kodu
 - Błędy działania aplikacji (wyjątki)
 
 </v-clicks>
-<br/>
 
 ::right::
 
@@ -86,13 +85,13 @@ public static void Main(string[] args)
 
 ---
 
-## .NET Logging pipeline
+## .NET Logging
 
 <v-clicks>
 
 <div>
 
-- opentelemetry-dotnet SDK rejestruje `OpenTelemetryLoggerProvider` jako `ILoggerProvider`
+- `WithLogging()`: opentelemetry-dotnet SDK rejestruje `OpenTelemetryLoggerProvider` jako `ILoggerProvider`
 
 </div>
 
@@ -106,7 +105,7 @@ public static void Main(string[] args)
 _logger.LogInformation("Incrementing {CounterId} counter by {Delta}", request.CounterId, request.Delta);
 ```
 
-```csharp
+```json
 {
   "LogLevel": "Information",
   "Category": "WebAPI.Handlers.IncrementNamedCounterHandler",
@@ -118,15 +117,15 @@ _logger.LogInformation("Incrementing {CounterId} counter by {Delta}", request.Co
 
 <div>
 
-- Log jest przetwarzany przez processory
-  - Tu następuje grupowanie (batching) rekordów
-  - Na tym etapie log może zostać odfiltrowany (ze względu na swój poziom)
+- Log jest przetwarzany przez **procesory**
+  - Tu następuje **grupowanie** (batching) rekordów
+  - Na tym etapie log może zostać **odfiltrowany** (ze względu na swój poziom)
 
 </div>
 
 <div>
 
-- Log jest jest wysyłany do eksportera (np: OTLP, Console)
+- Log jest jest wysyłany do **eksportera** (np: OTLP, Console)
 
 </div>
 
@@ -134,6 +133,7 @@ _logger.LogInformation("Incrementing {CounterId} counter by {Delta}", request.Co
 
 ---
 hideInToc: true
+transition: fade
 ---
 
 ## LogRecord
@@ -147,14 +147,13 @@ hideInToc: true
 | **SeverityText / SeverityNumber** | Log level                         |
 |     Timestamp / ObservedTimestamp | Czas kiedy log został wyemitowany |
 | TraceId<br/>SpanId<br/>TraceFlags | Trace context                     |
-|                          Resource | Serwis/środowisko generujący log  |
 |              InstrumentationScope | Instrumentacja generująca log     |
+|                          Resource | Serwis/środowisko generujący log  |
 
 </v-clicks>
 
 ---
 hideInToc: true
-transition: fade
 ---
 
 ## LogRecord
@@ -166,5 +165,5 @@ transition: fade
 | **SeverityText / SeverityNumber** | `Info`                                                                   |
 |     Timestamp / ObservedTimestamp | `2025-04-12T14:57:26.6768257Z`                                           |
 | TraceId<br/>SpanId<br/>TraceFlags | `d0194a116c84d1d36214436295d7fa55`<br/>`32434d330c6950e9`<br/>`Recorded` |
+|              InstrumentationScope |                                                                          |
 |                          Resource | `service.name: WebAPI`                                                   |
-|              InstrumentationScope | `telemetry.sdk.name: opentelemetry`                                      |

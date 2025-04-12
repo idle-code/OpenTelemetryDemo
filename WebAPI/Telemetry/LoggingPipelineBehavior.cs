@@ -6,6 +6,7 @@ using OpenTelemetry;
 
 namespace WebAPI.Telemetry;
 
+
 public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
@@ -14,7 +15,9 @@ public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TR
         = new(typeof(LoggingPipelineBehavior<TRequest, TResponse>).FullName!);
 
     public async Task<TResponse> Handle(
-        TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         var requestTypeName = typeof(TRequest).Name;
         using var activity = ActivitySource.StartActivity($"Handling {requestTypeName}", ActivityKind.Internal);
@@ -26,7 +29,6 @@ public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TR
         }
 
         Baggage.SetBaggage(requestTags);
-        // TODO: Use baggage to populate traces
 
         return await next();
     }

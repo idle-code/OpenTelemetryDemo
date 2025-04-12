@@ -60,7 +60,8 @@ otel
         .AddGrpcClientInstrumentation()
         .AddEntityFrameworkCoreInstrumentation()
         .AddSource("WebAPI.*")
-        .AddProcessor<BaggageEnrichingProcessor>())
+        .AddProcessor<BaggageEnrichingProcessor>()
+        .AddConsoleExporter())
     .WithMetrics(metrics => metrics
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()

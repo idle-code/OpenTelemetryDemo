@@ -55,7 +55,7 @@ Demo project
 
 ::right::
 
-<Toc text-sm minDepth="1" maxDepth="1" />
+<Toc text-sm minDepth="1" maxDepth="3" />
 
 
 ---
