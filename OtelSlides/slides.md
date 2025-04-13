@@ -79,5 +79,13 @@ src: ./pages/demo-project.md
 ---
 
 ---
-src: ./pages/otel-dotnet.md
+src: ./pages/otel.md
+---
+
+---
+src: ./pages/processor-filtering.md
+---
+
+---
+src: ./pages/context-propagation.md
 ---

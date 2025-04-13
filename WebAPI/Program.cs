@@ -41,6 +41,7 @@ builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(services =>
 });
 builder.Services.AddScoped<MessagePublisher>();
 builder.Services.AddScoped<ContextRetrievingMiddleware>();
+builder.Services.AddScoped<ExceptionLoggingMiddleware>();
 builder.Services.AddSingleton<CounterMetrics>();
 
 var connectionString = builder.Configuration.GetConnectionString("TheButton")!;
@@ -56,17 +57,19 @@ otel
     .WithTracing(tracing => tracing
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
-        .AddSqlClientInstrumentation()
         .AddGrpcClientInstrumentation()
-        .AddEntityFrameworkCoreInstrumentation()
+        .AddEntityFrameworkCoreInstrumentation(ef => ef.SetDbStatementForText = true)
         .AddSource("WebAPI.*")
         .AddProcessor<BaggageEnrichingProcessor>()
+        .AddProcessor<QueryFilteringProcessor>()
         .AddConsoleExporter())
     .WithMetrics(metrics => metrics
         .AddHttpClientInstrumentation()
         .AddAspNetCoreInstrumentation()
         .AddSqlClientInstrumentation()
-        .AddMeter("WebAPI.*"));
+        .AddRuntimeInstrumentation()
+        .AddMeter("WebAPI.*")
+        .AddConsoleExporter());
 #endregion
 
 if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
@@ -84,6 +87,7 @@ var app = builder.Build();
 
 app.UseCors();
 
+app.UseMiddleware<ExceptionLoggingMiddleware>();
 app.UseMiddleware<ContextRetrievingMiddleware>();
 
 #region endpoints

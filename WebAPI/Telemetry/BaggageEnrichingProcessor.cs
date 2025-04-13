@@ -3,6 +3,7 @@ using OpenTelemetry;
 
 namespace WebAPI.Telemetry;
 
+#region baggage-processor
 public class BaggageEnrichingProcessor : BaseProcessor<Activity>
 {
     public override void OnStart(Activity data)
@@ -13,3 +14,4 @@ public class BaggageEnrichingProcessor : BaseProcessor<Activity>
         }
     }
 }
+#endregion
