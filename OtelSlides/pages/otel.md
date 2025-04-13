@@ -6,6 +6,21 @@ Oficjalna dystybucja SDK OpenTelemetry dla platformy .NET
   <a href="https://github.com/open-telemetry/opentelemetry-dotnet" target="_blank">github.com/open-telemetry/opentelemetry-dotnet</a>
 </div>
 
+<br/>
+
+``` {*|1-2|4-8|10}
+OpenTelemetry.Extensions.Hosting
+Azure.Monitor.OpenTelemetry.AspNetCore
+
+OpenTelemetry.Instrumentation.EntityFrameworkCore
+OpenTelemetry.Instrumentation.GrpcNetClient
+OpenTelemetry.Instrumentation.Runtime
+OpenTelemetry.Instrumentation.SqlClient
+RabbitMQ.Client.OpenTelemetry
+
+OpenTelemetry.Exporter.Console
+```
+
 <!--
 - Oficjalna dystrybucja SDK
 - Do użytku w aplikacjach końcowych
@@ -17,6 +32,10 @@ layout: section
 ---
 
 # Sygnały
+
+<!--
+- Typy telemetrii
+-->
 
 ---
 src: ./otel-logs.md

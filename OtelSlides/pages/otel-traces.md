@@ -1,16 +1,23 @@
 ---
 layout: two-cols
 ---
+
 ## Traces
 Operacje wykonywane przez aplikację
 
 <v-clicks>
 
 - Zapytanie HTTP
-- Zdarzenie
+- Obsługa zdarzenia
 - Interakcja użytkownika
 
 </v-clicks>
+
+<!--
+- Unit Of Work
+- Interakcje
+-
+-->
 
 ---
 hideInToc: true
@@ -21,7 +28,11 @@ transition: fade
 
 - `WithTracing()`: opentelemetry-dotnet SDK rejestruje `ActivityListener` do wskazanych `ActivitySource`s
 
-<<< ../../WebAPI/Program.cs#opentelemetry-setup {*|7-15|13}{lines:true}
+<<< ../../WebAPI/Program.cs#opentelemetry-setup {*|7-16|13}{lines:true}
+
+<!--
+- AddSource jest ważne w przypadku tworzenia własnych Activity(Source)
+-->
 
 ---
 hideInToc: true
@@ -92,13 +103,24 @@ public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TR
     where TRequest : notnull
 ```
 
-<<< ../../WebAPI/Telemetry/LoggingPipelineBehavior.cs#logging-behavior {*|1-2|9-10|12-16|18|*}{lines:true}
+<<< ../../WebAPI/Telemetry/LoggingPipelineBehavior.cs#logging-behavior {*|1-2|5,9-10|12-16|18|*}{lines:true}
 
 <!--
-
 - Czym jest mediatorowy pipeline behavior?
   - porównanie do middleware
+  - router requestów
+- Gdzie/kiedy tworzyć ActivitySource?
+- Best practice: static, per-(sub)module
+-->
 
+---
+
+<img src="./ai_handling_span.png">
+
+<!--
+1 - Wizualizacja w drzewie
+2 - doklejone tagi
+3 - nazwa
 -->
 
 ---
@@ -123,6 +145,9 @@ hideInToc: true
 
 </v-clicks>
 
+<!--
+- Trace = drzewo spanów
+-->
 
 ---
 hideInToc: true
@@ -141,3 +166,9 @@ hideInToc: true
 | TraceId<br/>SpanId<br/>TraceFlags | `230909447214bb90523f50023553b274`<br/>`30dc7cfd9ccf4f0a`<br/>`Recorded`          |
 |              InstrumentationScope | `WebAPI.Telemetry.LoggingPipelineBehavior<WebAPI.Handlers.IncrementNamedCounter>` |
 |                          Resource | `telemetry.sdk.name: opentelemetry`                                               |
+
+<!--
+- Span status - Unset
+- Parent span ID - empty jeśli root
+  - ApplicationsInsight pokazuje takie samo Operation ID
+-->

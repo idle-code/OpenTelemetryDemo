@@ -2,13 +2,16 @@
 transition: fade
 ---
 
-# Projekt demo
+# Projekt demo - TheButton™
 
 <iframe width="100%" height="80%" src="http://localhost:8080/"></iframe>
 
 ---
+
+<img src="./mail.png" />
+
+---
 hideInToc: true
-transition: fade
 ---
 
 # Projekt demo
@@ -123,3 +126,7 @@ graph LR;
 </template>
 
 </v-switch>
+
+<!--
+- Ścieżka inkrementacji countera
+-->

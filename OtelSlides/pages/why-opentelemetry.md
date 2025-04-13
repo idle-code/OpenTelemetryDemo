@@ -8,6 +8,7 @@ transition: fade
 
 <template #1>
 <div align="center">
+
 ```mermaid
 graph TD;
     app["Application"]
@@ -16,11 +17,14 @@ graph TD;
     
     app --> backend --> fronted
 ```
+
 </div>
 </template>
 
 <template #2>
 <div align="center">
+
+
 ```mermaid
 graph TD;
     app["Application"]
@@ -33,12 +37,39 @@ graph TD;
     prometheus --> grafana
     loki --> grafana
 ```
+
+
 </div>
 </template>
 
-
 <template #3>
 <div align="center">
+
+
+```mermaid
+graph TD;
+    subgraph app["Application"]
+        prometheus_int["prometheus-net"]
+        loki_sink["Serilog.Sinks.Grafana.Loki"]
+    end
+    prometheus["Prometheus"]
+    loki["Loki"]
+    grafana["Grafana"]
+    
+    prometheus_int --> prometheus
+    loki_sink --> loki
+    prometheus --> grafana
+    loki --> grafana
+```
+
+
+</div>
+</template>
+
+<template #4>
+<div align="center">
+
+
 ```mermaid
 graph TD;
     app["Application"]
@@ -49,11 +80,15 @@ graph TD;
     
     app --> apm
 ```
+
+
 </div>
 </template>
 
-<template #4>
+<template #5>
 <div align="center">
+
+
 ```mermaid
 graph TD;
     app["Application"]
@@ -61,6 +96,8 @@ graph TD;
     
     app --> ai
 ```
+
+
 </div>
 </template>
 
@@ -76,7 +113,7 @@ hideInToc: true
 
 # Bonus: Redneck APM
 
-```csharp
+```csharp {*|1|5-7|9-21}{lines: true}
 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(SendExceptionDetails);
 
 static void SendExceptionDetails(object sender, UnhandledExceptionEventArgs args) 

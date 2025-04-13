@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using OpenTelemetry;
+using OpenTelemetry.Metrics;
 
 namespace WebAPI.Telemetry;
 

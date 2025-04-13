@@ -7,6 +7,7 @@ Krótkie wiadomości tekstowe generowane w czasie uruchamiania kodu
 
 <v-clicks>
 
+- Informacje o stanie aplikacji
 - Decyzja podjęta przez aplikację
 - Ostrzeżenie (błędy walidacji)
 - Błędy działania aplikacji (wyjątki)
@@ -83,6 +84,11 @@ public static void Main(string[] args)
 
 </v-click>
 
+<!--
+- Nie rozwodzić się nad tym co jest logowane
+- Warto używać poziomów logowania ze względu na koszty trzymania logów
+-->
+
 ---
 hideInToc: true
 ---
@@ -93,7 +99,7 @@ hideInToc: true
 
 <div>
 
-- `WithLogging()`: opentelemetry-dotnet SDK rejestruje `OpenTelemetryLoggerProvider` jako `ILoggerProvider`
+- `WithLogging()`: opentelemetry-dotnet SDK rejestruje `OpenTelemetryLoggerProvider`
 
 </div>
 
@@ -121,17 +127,23 @@ _logger.LogInformation("Incrementing {CounterId} counter by {Delta}", request.Co
 
 - Log jest przetwarzany przez **procesory**
   - Tu następuje **grupowanie** (batching) rekordów
-  - Na tym etapie log może zostać **odfiltrowany** (ze względu na swój poziom)
+  - Na tym etapie log może zostać **odfiltrowany** (np. ze względu na swój poziom)
 
 </div>
 
 <div>
 
-- Log jest jest wysyłany do **eksportera** (np: OTLP, Console)
+- Log jest jest wysyłany do **eksportera** (np. OTLP, Console)
 
 </div>
 
 </v-clicks>
+
+<!--
+- LoggerProvider nie tworzy loggerów - to jest sink na logi, LoggerFactory to robi
+- Adaptacja OpenTelemetry do istniejących implementacji
+- LoggerFactory konfiguruje ILoggery (aby pisały do LoggerProviderów),
+-->
 
 ---
 hideInToc: true
@@ -153,6 +165,12 @@ transition: fade
 |                          Resource | Serwis/środowisko generujący log  |
 
 </v-clicks>
+
+<!--
+- Atrybuty strukturalne lądują w Attributes
+
+- Co jeśli nie ma Activity? logi są nieskorelowane?
+-->
 
 ---
 hideInToc: true

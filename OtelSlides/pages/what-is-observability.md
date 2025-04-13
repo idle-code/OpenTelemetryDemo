@@ -27,6 +27,11 @@
 
 </v-click>
 
+<!--
+- Nawiązanie do układów sterowania - wiki
+- Dane wejściowe również się zaliczają
+-->
+
 ---
 layout: center
 ---
@@ -37,3 +42,11 @@ layout: center
 <template #2><img src="./maze-with-path.png" /></template>
 <template #3><img src="./maze-solved-with-path.png" /></template>
 </v-switch>
+
+<!--
+- Perl?
+- Kod aplikacji
+- Jakaś telemetria daje nam informację że coś jest nie tak
+- Dobra telemetria powie nam jak doszliśmy do tego etapu
+- ... po to aby wiedzieć gdzie zboczyliśmy z właściwej ścieżki
+-->

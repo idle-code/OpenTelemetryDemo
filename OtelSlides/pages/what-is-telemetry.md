@@ -10,3 +10,8 @@
     <template #3><img src="./app4.svg" /></template>
     <template #4><img src="./app5.svg" /></template>
 </v-switch>
+
+<!--
+- wyjątek bez wejścia - demoscena
+[click:3] - w przypadku prostych aplikacji/procesów, wejście, wyjście i kod mogą wystarczyć do zrozumienia
+-->

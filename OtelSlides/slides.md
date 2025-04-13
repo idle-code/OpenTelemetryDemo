@@ -16,6 +16,7 @@ drawings:
   persist: false
 # slide transition: https://sli.dev/guide/animations.html#slide-transitions
 transition: slide-left
+
 # enable MDC Syntax: https://sli.dev/features/mdc
 #mdc: true
 # open graph
@@ -31,7 +32,6 @@ transition: slide-left
 TODO: Change background to something OTELish.
 The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
 -->
-
 
 ---
 transition: fade-out

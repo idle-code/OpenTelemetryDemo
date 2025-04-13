@@ -9,6 +9,10 @@ Liczniki reprezentujące aktualny stan systemu
 
 </v-clicks>
 
+<!--
+- Statystyki
+-->
+
 ---
 hideInToc: true
 ---
@@ -58,8 +62,8 @@ public void CounterIncrement(string counterName, int delta)
 
 <div>
 
-- Domyślnie co 60 sekund metryki są **eksportowane**
-  - PrometheusExporter używa metody pull - via `/metrics` endpoint
+- Metryki są zbierane co 10 sekund, a pote **eksportowane**
+  - `PrometheusExporter` używa metody pull - via `/metrics` endpoint
 
 </div>
 
@@ -67,4 +71,47 @@ public void CounterIncrement(string counterName, int delta)
 
 <!--
 - Metryki są zapisywane w pamięci
+- AddMeter == AddSource
+- Jeden miernik, wiele instrumentów
+- Metryki używane są często w kodzie gdzie wymagana jest wydajność i nie potrzebujemy dokładnej precyzji kiedy zostały one wygenerowane
 -->
+
+---
+transition: fade
+hideInToc: true
+---
+
+## Metric
+
+<v-clicks>
+
+|                       |                                      |
+|----------------------:|:-------------------------------------|
+|       **Metric name** | Nazwa metryki                        |
+|        **Attributes** | Wymiary                              |
+|             **Value** | Wartość                              |
+|   Unit of measurement | Jednostka wartości                   |
+| Instrumentation scope | Nazwa miernika                       |
+|              Resource | Serwis/środowisko generujący metrykę |
+
+</v-clicks>
+
+---
+transition: fade
+hideInToc: true
+---
+
+## Metric
+
+|                       |                                                                 |
+|----------------------:|:----------------------------------------------------------------|
+|       **Metric name** | `WebAPI.counter.increments`                                     |
+|        **Attributes** | `counter_name: rabarbar`                                        |
+|             **Value** | 12                                                              |
+|   Unit of measurement |                                                                 |
+| Instrumentation scope | `WebAPI.counter`                                                |
+|              Resource | `telemetry.distro.name: Azure.Monitor.OpenTelemetry.AspNetCore` |
+
+---
+
+<img src="./ai_metrics.png">

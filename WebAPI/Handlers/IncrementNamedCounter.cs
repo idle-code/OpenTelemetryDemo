@@ -10,7 +10,6 @@ internal record IncrementNamedCounter(string CounterId, int Delta) : IRequest<Na
 internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCounter, NamedCounter>
 {
     const int Threshold = 10;
-    private static readonly Random Random = new();
 
     private readonly ILogger<IncrementNamedCounterHandler> _logger;
     private readonly TheButtonDbContext _dbContext;
@@ -32,9 +31,9 @@ internal class IncrementNamedCounterHandler : IRequestHandler<IncrementNamedCoun
         _counterMetrics = counterMetrics;
     }
 
+    #region handle-method
     public async Task<NamedCounter> Handle(IncrementNamedCounter request, CancellationToken cancellationToken)
     {
-        #region handle-method
         using var _ = _logger.PushProperty("CounterId", request.CounterId);
 
         var counter = await _dbContext.NamedCounters.SingleOrDefaultAsync(counter => counter.Id == request.CounterId, cancellationToken);

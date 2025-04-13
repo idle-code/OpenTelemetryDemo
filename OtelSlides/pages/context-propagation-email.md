@@ -1,17 +1,65 @@
+---
+transition: fade
+---
 # Propagacja kontekstu: Email
 
-```
+<img src="./mail.png">
+
+---
+hideInToc: true
+---
+# Propagacja kontekstu: Email
+
+<br/>
+
+<style>
+code {
+    font-size: 1.5em;
+}
+</style>
+
+```js
 http://localhost:8081/confirm
     ?token=4d4c0c918550479591816345892b9351
     &_traceparent=00-3f710633e014b9c90b70271af31719a3-b3edfe7ffaf4fd18-01
     &_baggage=request.CounterId=test,request.Delta=1
 ```
 
-### 00-3f710633e014b9c90b70271af31719a3-b3edfe7ffaf4fd18-01
+<br/>
+
+<v-click>
+
+## 00-3f710633e014b9c90b70271af31719a3-b3edfe7ffaf4fd18-01
+
+</v-click>
+<br/>
+
+<v-click>
+
+W3C traceparent - https://www.w3.org/TR/trace-context/
+
+```mermaid
+---
+title: "W3C traceparent"
+---
+block-beta
+    columns 4
+    version["Version"]
+    traceId["Trace ID"]    
+    parentId["Parent (span) ID"]
+    flags["Flags"]
+    
+    versionVal["00"]
+    traceIdVal["3f710633e014b9c90b70271af31719a3"]
+    parentIdVal["b3edfe7ffaf4fd18"]
+    flagsVal["01"]
+```
+
+</v-click>
 
 ---
-transition: fade
 hideInToc: true
+transition: fade
 ---
 
 ## Propagacja kontekstu: Email - wysyłanie
@@ -34,6 +82,8 @@ private static readonly TextMapPropagator Propagator = Propagators.DefaultTextMa
 - Jest to przykład manualnej instrumentacji
 -->
 
+---
+hideInToc: true
 ---
 
 ## Propagacja kontekstu: Email - odbieranie

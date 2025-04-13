@@ -1,16 +1,22 @@
 # Składniki OpenTelemetry
 
-<v-clicks>
+<v-clicks depth="2">
 
-- Protokół wymiany danych OTLP
 - Konwencje nazewnicze
 - Wskazówki odnośnie API
-- SDK dla poszczególnych języków programowania
-- Biblioteki obsługujące najczęściej występujące scenariusze
-- Systemy instrumentacji automatycznej
-- OpenTelemetry Collector - proxy do zbierania metryk
+- Ekosystem dla poszczególnych języków/środowisk programowania
+  - SDK dla poszczególnych języków/środowisk programowania
+  - Biblioteki obsługujące najczęściej występujące scenariusze
+  - Systemy instrumentacji automatycznej
+- Protokół wymiany danych OTLP
+- OpenTelemetry Collector - proxy do zbierania/przetwarzania i przekazywania dalej sygnałów
 
 </v-clicks>
+
+<!--
+- OpenCensus oraz OpenTracking
+- Jest to średnio-sformalizowany standard - RFC
+-->
 
 ---
 
@@ -20,6 +26,7 @@
 <v-switch>
 
 <template #0>
+
 ```mermaid {scale: 0.7}
 graph TD;
     app["Application"]
@@ -27,9 +34,11 @@ graph TD;
     
     app --> apm
 ```
+
 </template>
 
 <template #1>
+
 ```mermaid {scale: 0.7}
 graph TD;
     subgraph app["Application"]
@@ -46,7 +55,7 @@ graph TD;
     end
     apm["APM"]
     
-    exporters -- "OTLP" --> apm
+    exporters --> apm
 ```
 </template>
 
@@ -77,7 +86,7 @@ graph TD;
     
     apm["APM"]
     
-    collectorExporters -- "OTLP" --> apm
+    collectorExporters --> apm
 ```
 </template>
 
