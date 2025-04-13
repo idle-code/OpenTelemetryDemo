@@ -12,7 +12,7 @@ import { FormsModule } from "@angular/forms";
             <label for="counterName">Counter name:</label><br/>
             <input id="counterName" [(ngModel)]="PushCounterName" (change)="UpdateCounter()"/><br/>
             <label for="incrementButton">Current clicks: {{ PushCounter() }}</label><br/>
-            <button id="incrementButton" (click)="RegisterPush()">Push me!</button>
+            <button style="width: 100%" id="incrementButton" (click)="RegisterPush()">Add +1</button>
         </div>
     `,
     styleUrl: './push-counter.component.scss'

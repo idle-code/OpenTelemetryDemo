@@ -40,7 +40,7 @@ builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(services =>
     };
 });
 builder.Services.AddScoped<MessagePublisher>();
-builder.Services.AddScoped<ContextRetrievingMiddleware>();
+builder.Services.AddScoped<ContextFromQueryMiddleware>();
 builder.Services.AddScoped<ExceptionLoggingMiddleware>();
 builder.Services.AddSingleton<CounterMetrics>();
 
@@ -62,7 +62,7 @@ otel
         .AddRabbitMQInstrumentation()
         .AddSource("WebAPI.*")
         .AddProcessor<BaggageEnrichingProcessor>()
-        .AddProcessor<QueryFilteringProcessor>()
+        //.AddProcessor<QueryFilteringProcessor>()
         .AddConsoleExporter())
     .WithMetrics(metrics => metrics
         .AddHttpClientInstrumentation()
@@ -89,7 +89,7 @@ var app = builder.Build();
 app.UseCors();
 
 app.UseMiddleware<ExceptionLoggingMiddleware>();
-app.UseMiddleware<ContextRetrievingMiddleware>();
+app.UseMiddleware<ContextFromQueryMiddleware>();
 
 #region endpoints
 

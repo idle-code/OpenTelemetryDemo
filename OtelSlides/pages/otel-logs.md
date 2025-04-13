@@ -1,7 +1,7 @@
 ---
 layout: two-cols
 ---
-## Logi
+## Logs
 
 Krótkie wiadomości tekstowe generowane w czasie uruchamiania kodu
 
@@ -83,6 +83,8 @@ public static void Main(string[] args)
 
 </v-click>
 
+---
+hideInToc: true
 ---
 
 ## .NET Logging

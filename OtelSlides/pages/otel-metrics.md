@@ -10,6 +10,8 @@ Liczniki reprezentujące aktualny stan systemu
 </v-clicks>
 
 ---
+hideInToc: true
+---
 
 ## .NET Metrics
 

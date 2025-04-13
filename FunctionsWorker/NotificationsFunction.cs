@@ -31,6 +31,7 @@ public class NotificationFunction
         _smtpOptions = smtpOptions.Value;
     }
 
+    #region function
     [Function(nameof(SendThresholdReachedNotification))]
     public async ValueTask SendThresholdReachedNotification(
         [RabbitMQTrigger(ThresholdsQueueName, ConnectionStringSetting = "RabbitMQ")]
@@ -43,6 +44,7 @@ public class NotificationFunction
         var message = JsonSerializer.Deserialize<ThresholdReachedMessage>(messageString);
         await SendNotification(message!, context.CancellationToken);
     }
+    #endregion
 
     [Function(nameof(SendThresholdReachedNotificationHttp))]
     public async ValueTask SendThresholdReachedNotificationHttp(
@@ -85,6 +87,7 @@ public class NotificationFunction
         }
     }
 
+    #region send-notification
     private async ValueTask SendNotification(ThresholdReachedMessage message, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Received {@Message}", message);
@@ -97,13 +100,16 @@ public class NotificationFunction
             body: $"""
                   <h1>Congratulations!</h1>
                   <div>
-                  You've reached {message.Threshold} on {message.CounterId} counter, click the link below to grab additional points:<br/>
+                  You've reached {message.Threshold} on {message.CounterId} counter,
+                  click the link below to grab additional points:<br/>
                   <a href="{tokenUrl}">{tokenUrl}</a>
                   </div>
                   """,
             cancellationToken: cancellationToken);
     }
+    #endregion
 
+    #region url-enrichement
     private string EnrichWithTraceContext(string url)
     {
         var activity = Activity.Current;
@@ -113,7 +119,10 @@ public class NotificationFunction
         }
 
         var uriBuilder = new UriBuilder(url);
-        Propagator.Inject(new PropagationContext(activity.Context, Baggage.Current), uriBuilder, InjectContextTagsIntoQueryParams);
+        Propagator.Inject(
+            new PropagationContext(activity.Context, Baggage.Current),
+            uriBuilder,
+            InjectContextTagsIntoQueryParams);
         return uriBuilder.ToString();
     }
 
@@ -121,6 +130,7 @@ public class NotificationFunction
     {
         url.Query += $"&_{key}={UrlEncoder.Default.Encode(value)}";
     }
+    #endregion
 
     private async ValueTask SendEmail(string toAddress, string subject, string body, CancellationToken cancellationToken)
     {

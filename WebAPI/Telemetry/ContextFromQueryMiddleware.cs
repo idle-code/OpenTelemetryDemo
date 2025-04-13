@@ -6,8 +6,8 @@ using OpenTelemetry.Context.Propagation;
 
 namespace WebAPI.Telemetry;
 
-#region context-retrieving-middleware
-public class ContextRetrievingMiddleware : IMiddleware
+#region query-context-middleware
+public class ContextFromQueryMiddleware : IMiddleware
 {
     private static readonly TextMapPropagator Propagator = Propagators.DefaultTextMapPropagator;
 
@@ -35,12 +35,7 @@ public class ContextRetrievingMiddleware : IMiddleware
     private static IEnumerable<string>? ExtractContextTagsFromQueryParams(NameValueCollection queryParams, string key)
     {
         var value = queryParams[$"_{key}"];
-        if (value is null)
-        {
-            return null;
-        }
-
-        return [value];
+        return value is null ? null : [value];
     }
 }
 #endregion

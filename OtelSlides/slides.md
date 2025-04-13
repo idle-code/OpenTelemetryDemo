@@ -37,21 +37,22 @@ The last comment block of each slide will be treated as slide notes. It will be 
 transition: fade-out
 layout: two-cols
 layoutClass: gap-16
+hideInToc: true
 ---
 
 # Intro
-
-
-// TODO: Self intro?
-<br>
-Demo project 
+<br/>
 
 <div>
   <a href="https://github.com/idle-code/OpenTelemetryDemo" target="_blank" class="slidev-icon-btn"><carbon:logo-github /></a>
   <a href="https://github.com/idle-code/OpenTelemetryDemo" target="_blank">github.com/idle-code/OpenTelemetryDemo</a>
 </div>
 
-<img style="margin: 10%" width="50%" src="./gh-qr-code.svg" />
+<div>
+
+<img style="margin-left: auto; margin-right: auto; width: 50%" src="./gh-qr-code.svg" />
+
+</div>
 
 ::right::
 

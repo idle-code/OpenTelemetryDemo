@@ -103,6 +103,7 @@ public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TR
 
 ---
 transition: fade
+hideInToc: true
 ---
 
 ## Span

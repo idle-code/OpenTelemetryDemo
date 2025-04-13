@@ -1,1 +1,0 @@
-# Propagacja kontekstu: RabbitMQ

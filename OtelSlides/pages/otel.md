@@ -1,4 +1,6 @@
 # opentelemetry-dotnet SDK
+Oficjalna dystybucja SDK OpenTelemetry dla platformy .NET
+
 <div>
   <a href="https://github.com/open-telemetry/opentelemetry-dotnet" target="_blank" class="slidev-icon-btn"><carbon:logo-github /></a>
   <a href="https://github.com/open-telemetry/opentelemetry-dotnet" target="_blank">github.com/open-telemetry/opentelemetry-dotnet</a>
