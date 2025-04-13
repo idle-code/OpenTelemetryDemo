@@ -119,7 +119,7 @@ public class NotificationFunction
 
     private void InjectContextTagsIntoQueryParams(UriBuilder url, string key, string value)
     {
-        url.Query += $"&{key}={UrlEncoder.Default.Encode(value)}";
+        url.Query += $"&_{key}={UrlEncoder.Default.Encode(value)}";
     }
 
     private async ValueTask SendEmail(string toAddress, string subject, string body, CancellationToken cancellationToken)

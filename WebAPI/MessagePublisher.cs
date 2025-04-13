@@ -24,6 +24,7 @@ public class MessagePublisher
         _rabbitConnectionFactory = rabbitConnectionFactory;
     }
 
+    #region publish-message
     public async ValueTask PublishMessage(ThresholdReachedMessage message, CancellationToken cancellationToken)
     {
         using var activity = ActivitySource.StartActivity("RabbitMQ Sender", ActivityKind.Producer);
@@ -39,36 +40,14 @@ public class MessagePublisher
             arguments: null,
             cancellationToken: cancellationToken);
 
-        var props = new BasicProperties();
-        if (activity is not null)
-        {
-            // If there are no listeners for the activity - it will be null
-            props = InjectTracingContext(activity, props);
-        }
-
         var messageJson = JsonSerializer.Serialize(message);
         var messageBytes = Encoding.UTF8.GetBytes(messageJson);
         await channel.BasicPublishAsync(
             exchange: string.Empty,
             routingKey: ThresholdsQueueName,
             mandatory: true,
-            basicProperties: props,
             body: messageBytes,
             cancellationToken: cancellationToken);
     }
-
-    private static BasicProperties InjectTracingContext(Activity activity, BasicProperties props)
-    {
-        activity.SetTag("messaging.destination_kind", "queue");
-        activity.SetTag("messaging.rabbitmq.queue", ThresholdsQueueName);
-        activity.SetTag("messaging.system", "rabbitmq");
-        Propagator.Inject(new PropagationContext(activity.Context, Baggage.Current), props, InjectContextTagsIntoMessageProperties);
-        return props;
-    }
-
-    private static void InjectContextTagsIntoMessageProperties(IBasicProperties props, string key, string value)
-    {
-        props.Headers ??= new Dictionary<string, object?>();
-        props.Headers[key] = value;
-    }
+    #endregion
 }

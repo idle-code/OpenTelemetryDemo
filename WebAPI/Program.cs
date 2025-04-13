@@ -59,6 +59,7 @@ otel
         .AddAspNetCoreInstrumentation()
         .AddGrpcClientInstrumentation()
         .AddEntityFrameworkCoreInstrumentation(ef => ef.SetDbStatementForText = true)
+        .AddRabbitMQInstrumentation()
         .AddSource("WebAPI.*")
         .AddProcessor<BaggageEnrichingProcessor>()
         .AddProcessor<QueryFilteringProcessor>()

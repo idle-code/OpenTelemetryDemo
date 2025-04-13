@@ -6,6 +6,7 @@ using OpenTelemetry.Context.Propagation;
 
 namespace WebAPI.Telemetry;
 
+#region context-retrieving-middleware
 public class ContextRetrievingMiddleware : IMiddleware
 {
     private static readonly TextMapPropagator Propagator = Propagators.DefaultTextMapPropagator;
@@ -13,19 +14,13 @@ public class ContextRetrievingMiddleware : IMiddleware
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         ExtractActivityContextFromUrl(context);
-
         await next(context);
     }
 
     private void ExtractActivityContextFromUrl(HttpContext context)
     {
         var activity = Activity.Current;
-        if (activity is null)
-        {
-            return;
-        }
-
-        if (!context.Request.QueryString.HasValue)
+        if (activity is null || !context.Request.QueryString.HasValue)
         {
             return;
         }
@@ -39,7 +34,7 @@ public class ContextRetrievingMiddleware : IMiddleware
 
     private static IEnumerable<string>? ExtractContextTagsFromQueryParams(NameValueCollection queryParams, string key)
     {
-        var value = queryParams[key];
+        var value = queryParams[$"_{key}"];
         if (value is null)
         {
             return null;
@@ -48,3 +43,4 @@ public class ContextRetrievingMiddleware : IMiddleware
         return [value];
     }
 }
+#endregion
