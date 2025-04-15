@@ -14,7 +14,7 @@
 
 <v-click at="+2">
 
-### By ją osiągnąć, aplikacje muszą być odpowiednio instrumentowane, aby generować **telemetrię**
+### By ją osiągnąć, aplikacje muszą być odpowiednio **instrumentowane**, aby generować **telemetrię**.
 
 </v-click>
 
@@ -29,7 +29,7 @@
 
 <!--
 - Nawiązanie do układów sterowania - wiki
-- Dane wejściowe również się zaliczają
+- Dane wejściowe również się zaliczają
 -->
 
 ---
@@ -46,7 +46,7 @@ layout: center
 <!--
 - Perl?
 - Kod aplikacji
-- Jakaś telemetria daje nam informację że coś jest nie tak
+- Jakaś telemetria daje nam informację że coś jest nie tak
 - Dobra telemetria powie nam jak doszliśmy do tego etapu
 - ... po to aby wiedzieć gdzie zboczyliśmy z właściwej ścieżki
 -->

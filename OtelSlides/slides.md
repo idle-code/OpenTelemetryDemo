@@ -1,4 +1,5 @@
 ---
+download: true
 # You can also start simply with 'default'
 theme: seriph
 background: ./cover.jpg
@@ -27,11 +28,6 @@ transition: slide-left
 # <img style="display: inline; width: 50%" src="./opentelemetry-horizontal-color.svg"><br/>w .NET
 
 **Jak to w zasadzie działa?**
-
-<!--
-TODO: Change background to something OTELish.
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
 
 ---
 transition: fade-out
@@ -84,9 +80,13 @@ src: ./pages/otel.md
 ---
 
 ---
+src: ./pages/context-propagation.md
+---
+
+---
 src: ./pages/processor-filtering.md
 ---
 
 ---
-src: ./pages/context-propagation.md
+src: ./pages/otel-baggage.md
 ---

@@ -4,7 +4,7 @@ Liczniki reprezentujące aktualny stan systemu
 <v-clicks>
 
 - Liczba obsłużonych zapytań
-- Poziom użycia pamięci
+- Aktualne użycie pamięci
 - Opóźnienia obsługiwanych zapytań
 
 </v-clicks>
@@ -22,7 +22,7 @@ hideInToc: true
 <v-clicks>
 <div>
 
-- `WithMetrics()`: opentelemetry-dotnet SDK subskrybuje się do wskazanych mierników via `.AddMeter()`
+- `WithMetrics()`: opentelemetry-dotnet SDK subskrybuje się do wskazanych mierników via `.AddMetrics()`
 
 </div>
 
@@ -62,7 +62,7 @@ public void CounterIncrement(string counterName, int delta)
 
 <div>
 
-- Metryki są zbierane co 10 sekund, a pote **eksportowane**
+- Metryki są zbierane co 10 sekund, a potem **eksportowane**
   - `PrometheusExporter` używa metody pull - via `/metrics` endpoint
 
 </div>
@@ -87,7 +87,7 @@ hideInToc: true
 
 |                       |                                      |
 |----------------------:|:-------------------------------------|
-|       **Metric name** | Nazwa metryki                        |
+|       **Metric name** | Nazwa metryki/instrumentu            |
 |        **Attributes** | Wymiary                              |
 |             **Value** | Wartość                              |
 |   Unit of measurement | Jednostka wartości                   |

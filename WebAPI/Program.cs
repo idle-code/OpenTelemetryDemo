@@ -62,7 +62,6 @@ otel
         .AddRabbitMQInstrumentation()
         .AddSource("WebAPI.*")
         .AddProcessor<BaggageEnrichingProcessor>()
-        //.AddProcessor<QueryFilteringProcessor>()
         .AddConsoleExporter())
     .WithMetrics(metrics => metrics
         .AddHttpClientInstrumentation()

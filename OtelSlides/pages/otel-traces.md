@@ -13,6 +13,24 @@ Operacje wykonywane przez aplikację
 
 </v-clicks>
 
+<v-click>
+
+<h2>Spans</h2>
+Operacje wykonywane przez aplikację
+
+</v-click>
+
+<v-clicks>
+
+- Zapytanie HTTP
+- Obsługa zdarzenia
+- Interakcja użytkownika
+- Zapytanie do bazy danych
+- Wywołanie serwisu wewnętrznego
+- MediatR handler
+
+</v-clicks>
+
 <!--
 - Unit Of Work
 - Interakcje
@@ -28,7 +46,7 @@ transition: fade
 
 - `WithTracing()`: opentelemetry-dotnet SDK rejestruje `ActivityListener` do wskazanych `ActivitySource`s
 
-<<< ../../WebAPI/Program.cs#opentelemetry-setup {*|7-16|13}{lines:true}
+<<< ../../WebAPI/Program.cs#opentelemetry-setup {*|7-16|13|*}{lines:true}
 
 <!--
 - AddSource jest ważne w przypadku tworzenia własnych Activity(Source)

@@ -13,5 +13,6 @@
 
 <!--
 - wyjątek bez wejścia - demoscena
-[click:3] - w przypadku prostych aplikacji/procesów, wejście, wyjście i kod mogą wystarczyć do zrozumienia
+
+[click:3] - w przypadku prostych aplikacji/procesów, wejście, wyjście i kod mogą wystarczyć do zrozumienia
 -->

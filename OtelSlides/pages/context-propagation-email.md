@@ -1,6 +1,7 @@
 ---
 transition: fade
 ---
+
 # Propagacja kontekstu: Email
 
 <img src="./mail.png">
@@ -64,7 +65,7 @@ transition: fade
 
 ## Propagacja kontekstu: Email - wysyłanie
 
-<<< ../../FunctionsWorker/NotificationsFunction.cs#send-notification {*|6}{lines:true, maxHeight: '80%'}
+<<< ../../FunctionsWorker/NotificationsFunction.cs#send-notification {*|6|*}{lines:true, maxHeight: '80%'}
 
 ---
 hideInToc: true
@@ -76,7 +77,7 @@ hideInToc: true
 private static readonly TextMapPropagator Propagator = Propagators.DefaultTextMapPropagator;
 ```
 
-<<< ../../FunctionsWorker/NotificationsFunction.cs#url-enrichement {*|9-14|9-14,17-20}{lines:true, maxHeight: '80%'}
+<<< ../../FunctionsWorker/NotificationsFunction.cs#url-enrichement {*|9-14|9-14,17-20|*}{lines:true, maxHeight: '80%'}
 
 <!--
 - Jest to przykład manualnej instrumentacji
@@ -88,7 +89,7 @@ hideInToc: true
 
 ## Propagacja kontekstu: Email - odbieranie
 
-<<< ../../WebAPI/Telemetry/ContextFromQueryMiddleware.cs#query-context-middleware {*|7|13-17|19|3,20|20,26-30|21|23}{lines:true, maxHeight: '85%'}
+<<< ../../WebAPI/Telemetry/ContextFromQueryMiddleware.cs#query-context-middleware {*|7|13-17|19|3,20|20,26-30|21|23|*}{lines:true, maxHeight: '85%'}
 
 ---
 

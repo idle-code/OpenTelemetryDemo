@@ -28,8 +28,6 @@ public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TR
             activity?.SetTag(key, value);
         }
 
-        Baggage.SetBaggage(requestTags);
-
         return await next();
     }
 

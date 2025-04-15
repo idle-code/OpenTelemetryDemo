@@ -1,4 +1,4 @@
-## Baggage
+# Baggage
 
 Globalne metadane operacji
 
@@ -17,8 +17,7 @@ Globalne metadane operacji
 -->
 
 ---
-hideInToc: true
----
-## BaggageEnrichingProcessor
+
+# Processor: Propagacja bagażu
 
 <<< ../../WebAPI/Telemetry/BaggageEnrichingProcessor.cs#baggage-processor {*}{lines:true}

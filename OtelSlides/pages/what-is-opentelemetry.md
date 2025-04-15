@@ -5,11 +5,11 @@
 - Konwencje nazewnicze
 - Wskazówki odnośnie API
 - Ekosystem dla poszczególnych języków/środowisk programowania
-  - SDK dla poszczególnych języków/środowisk programowania
+  - SDK
   - Biblioteki obsługujące najczęściej występujące scenariusze
   - Systemy instrumentacji automatycznej
 - Protokół wymiany danych OTLP
-- OpenTelemetry Collector - proxy do zbierania/przetwarzania i przekazywania dalej sygnałów
+- OpenTelemetry Collector - proxy do zbierania/przetwarzania i przekazywania sygnałów dalej
 
 </v-clicks>
 

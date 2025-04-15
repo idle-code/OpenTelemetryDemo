@@ -1,6 +1,7 @@
 ---
 layout: two-cols
 ---
+
 ## Logs
 
 Krótkie wiadomości tekstowe generowane w czasie uruchamiania kodu
@@ -9,8 +10,8 @@ Krótkie wiadomości tekstowe generowane w czasie uruchamiania kodu
 
 - Informacje o stanie aplikacji
 - Decyzja podjęta przez aplikację
-- Ostrzeżenie (błędy walidacji)
-- Błędy działania aplikacji (wyjątki)
+- Ostrzeżenia (błędy walidacji)
+- Błędy (wyjątki)
 
 </v-clicks>
 
@@ -74,7 +75,7 @@ public static void Main(string[] args)
 
 ---
 
-<<< ../../WebAPI/Handlers/IncrementNamedCounter.cs#handle-method {*|6,11|1}{lines:true}
+<<< ../../WebAPI/Handlers/IncrementNamedCounter.cs#handle-method {*|8,13|3|*}{lines:true}
 
 <br/>
 
@@ -85,12 +86,13 @@ public static void Main(string[] args)
 </v-click>
 
 <!--
-- Nie rozwodzić się nad tym co jest logowane
+- Nie rozwodzić się nad tym co jest logowane
 - Warto używać poziomów logowania ze względu na koszty trzymania logów
 -->
 
 ---
 hideInToc: true
+transition: fade
 ---
 
 ## .NET Logging
@@ -103,11 +105,29 @@ hideInToc: true
 
 </div>
 
+<<< ../../WebAPI/Program.cs#opentelemetry-setup {*|5-6|*}{lines:true}
+
+</v-clicks>
+
+---
+hideInToc: true
+---
+
+## .NET Logging
+
+<div>
+
+- `WithLogging()`: opentelemetry-dotnet SDK rejestruje `OpenTelemetryLoggerProvider`
+
+</div>
+
 <div>
 
 - `ILoggerFactory` tworzy instancję `ILogger` która jest wstrzykiwana do klasy `IncrementNamedCounterHandler`
 
 </div>
+
+<v-clicks>
 
 ```csharp
 _logger.LogInformation("Incrementing {CounterId} counter by {Delta}", request.CounterId, request.Delta);
@@ -140,9 +160,11 @@ _logger.LogInformation("Incrementing {CounterId} counter by {Delta}", request.Co
 </v-clicks>
 
 <!--
+
 - LoggerProvider nie tworzy loggerów - to jest sink na logi, LoggerFactory to robi
 - Adaptacja OpenTelemetry do istniejących implementacji
-- LoggerFactory konfiguruje ILoggery (aby pisały do LoggerProviderów),
+- LoggerFactory konfiguruje ILoggery (aby pisały do LoggerProviderów)
+
 -->
 
 ---
@@ -167,7 +189,7 @@ transition: fade
 </v-clicks>
 
 <!--
-- Atrybuty strukturalne lądują w Attributes
+- Atrybuty strukturalne lądują w Attributes
 
 - Co jeśli nie ma Activity? logi są nieskorelowane?
 -->

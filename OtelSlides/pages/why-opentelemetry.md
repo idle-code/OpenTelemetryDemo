@@ -101,19 +101,105 @@ graph TD;
 </div>
 </template>
 
+<template #6>
+<div align="center">
+
+```mermaid
+graph TD;
+    app["Application"]
+    ai["Application Insights"]
+    datadog["Datadog"]
+    
+    app --> ai
+    app -.-> datadog
+```
+
+</div>
+</template>
+
+<template #7>
+<div align="center">
+
+```mermaid
+graph TD;
+    app1["Application 1"]
+    app2["Application 2"]
+    app3["Application 3"]
+    ai["Application Insights"]
+    datadog["Datadog"]
+    
+    app1 --> ai
+    app2 --> ai
+    app3 --> ai
+    app3 -.-> datadog
+```
+
+</div>
+</template>
+
+
+<template #8>
+<div align="center">
+
+```mermaid
+graph TD;
+    app1["C#"]
+    app2["Python"]
+    app3["Rust"]
+    ai["Application Insights"]
+    datadog["Datadog"]
+    
+    app1 --> datadog
+    app2 --> datadog
+    app3 --> ai
+    app3 -.-> datadog
+```
+
+</div>
+</template>
+
+
+<template #9>
+<div align="center">
+
+```mermaid
+graph TD;
+    app1["C#"]
+    app2["Python"]
+    app3["Rust"]
+    ai["Application Insights"]
+    datadog["Datadog"]
+    
+    app1 --> datadog
+    app2 --> datadog
+    app3 --> ai
+    app3 -.-> datadog
+    
+    ai -.- datadog
+```
+
+</div>
+</template>
+
 </v-switch>
 
 <!--
+- Telemetria nie jest niczym nowym
 - APM - Application Performance Monitoring
+
+TODO: Kooperacja wielu systemów
 -->
 
 ---
 hideInToc: true
+transition: fade
 ---
 
 # Bonus: Redneck APM
 
-```csharp {*|1|5-7|9-21}{lines: true}
+<v-click>
+
+```csharp {*|1|5-7|9-21|*}{lines: true}
 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(SendExceptionDetails);
 
 static void SendExceptionDetails(object sender, UnhandledExceptionEventArgs args) 
@@ -138,3 +224,33 @@ static void SendExceptionDetails(object sender, UnhandledExceptionEventArgs args
 }
 
 ```
+
+</v-click>
+
+<!--
+Wprowadzenie - system ERP
+    - rejestracja nowych pracowników w biurach
+    - organizacja zakwaterowania oraz dojazdu do pracy
+    - obliczenia godzin pracy, raporty
+
+Cecha: działał lokalnie na komputerach użytkowników, łączył się tylko z bazą danych MySQL
+-->
+
+---
+hideInToc: true
+---
+
+# Bonus: Redneck APM
+
+<div align="center">
+
+```mermaid
+graph TD;
+    app["Application"]
+    backend["Support mailbox"]
+    fronted["Thunderbird"]
+    
+    app --> backend --> fronted
+```
+
+</div>
